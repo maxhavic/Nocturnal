@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nocturnal Character Creator</title>
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --panel: #17171b;
+      --panel-2: #202027;
+      --text: #f0ece4;
+      --muted: #b9b0a2;
+      --red: #9e1f2f;
+      --red-2: #c42d3d;
+      --line: #39343a;
+      --good: #90b48a;
+      --warn: #d7aa55;
+      --bad: #c75c5c;
+      --paper: #f4efe4;
+      --ink: #151515;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(circle at top, #191922 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 32px 20px 18px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #111116, #0d0d0f);
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: var(--text);
+      text-shadow: 0 0 22px rgba(158, 31, 47, 0.3);
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: var(--red-2);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    main {
+      width: min(1200px, 94vw);
+      margin: 24px auto 60px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(23, 23, 27, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+
+    @media (max-width: 850px) {
+      .span-8, .span-6, .span-4 { grid-column: span 12; }
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title h2 {
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #101014;
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--red-2);
+      box-shadow: 0 0 0 3px rgba(196, 45, 61, 0.14);
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 650px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .attr-row, .skill-row, .track-row {
+      display: grid;
+      grid-template-columns: 1.4fr auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+
+    .attr-row:last-child, .skill-row:last-child, .track-row:last-child { border-bottom: 0; }
+
+    .name strong { display: block; }
+    .name span { color: var(--muted); font-size: 0.82rem; }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .stepper button, .actions button {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+
+    .stepper button:hover, .actions button:hover {
+      border-color: var(--red-2);
+      color: #fff;
+    }
+
+    .value {
+      min-width: 34px;
+      text-align: center;
+      color: var(--text);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 850px) {
+      .status { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .pill {
+      background: #101014;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .pill strong {
+      display: block;
+      color: var(--red-2);
+      font-size: 1.35rem;
+    }
+
+    .ok { color: var(--good); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+
+    .track-boxes {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--muted);
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .box.filled {
+      background: var(--red);
+      border-color: var(--red-2);
+    }
+
+    .box.threshold {
+      border-right: 3px solid var(--text);
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 7px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .primary {
+      background: var(--red) !important;
+      border-color: var(--red-2) !important;
+    }
+
+    .print-sheet {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: var(--ink);
+      }
+      header, main > .actions, .screen-only { display: none !important; }
+      main { width: 100%; margin: 0; }
+      .print-sheet {
+        display: block;
+        color: var(--ink);
+        background: white;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      .print-sheet h1, .print-sheet h2, .print-sheet h3 {
+        color: var(--ink);
+        text-shadow: none;
+      }
+      .print-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .print-card {
+        border: 1px solid #222;
+        padding: 10px;
+        margin-bottom: 10px;
+        break-inside: avoid;
+      }
+      .print-line {
+        border-bottom: 1px solid #222;
+        min-height: 24px;
+        padding-top: 4px;
+      }
+      .print-boxes span {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #222;
+        margin-right: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Nocturnal</h1>
+    <p>A Modern Ghost-Hunting RPG Character Creator</p>
+  </header>
+
+  <main>
+    <section class="actions screen-only">
+      <button class="primary" onclick="printSheet()">Print Character Sheet</button>
+      <button onclick="saveCharacter()">Save to Browser</button>
+      <button onclick="loadCharacter()">Load Saved</button>
+      <button onclick="downloadJSON()">Export JSON</button>
+      <button onclick="resetCharacter()">Reset</button>
+    </section>
+
+    <section class="grid screen-only">
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 1: Investigator Identity</h2>
+          <span class="hint">Start with the person before the haunting.</span>
+        </div>
+        <div class="two-col">
+          <div>
+            <label for="charName">Character Name</label>
+            <input id="charName" placeholder="Mara Voss" />
+          </div>
+          <div>
+            <label for="playerName">Player Name</label>
+            <input id="playerName" placeholder="Player" />
+          </div>
+          <div>
+            <label for="occupation">Occupation / Background</label>
+            <input id="occupation" placeholder="Night-shift hospital administrator" />
+          </div>
+          <div>
+            <label for="concept">Concept</label>
+            <input id="concept" placeholder="Tired records expert who notices impossible patterns" />
+          </div>
+        </div>
+        <label for="faith">Faith / Conviction</label>
+        <input id="faith" placeholder="Records matter because the dead deserve to be counted correctly." />
+      </div>
+
+      <div class="card span-8">
+        <div class="section-title">
+          <h2>Step 2: Attributes</h2>
+          <span id="attrStatus" class="hint">Spend 6 points. Max 3 before Awakening.</span>
+        </div>
+        <div id="attributes"></div>
+        <div class="status">
+          <div class="pill">Points Spent<strong id="attrSpent">0</strong></div>
+          <div class="pill">Remaining<strong id="attrRemain">6</strong></div>
+          <div class="pill">Base Total<strong>6</strong></div>
+          <div class="pill">Starting Max<strong>3</strong></div>
+        </div>
+      </div>
+
+      <div class="card span-4">
+        <div class="section-title">
+          <h2>Step 3: Awakening</h2>
+          <span class="hint">Magic always leaves a mark.</span>
+        </div>
+        <label for="awakeningStory">How did magic enter your life?</label>
+        <textarea id="awakeningStory" placeholder="Describe the impossible event that changed the character."></textarea>
+        <label for="awakeningAttr">Awakening Attribute +1</label>
+        <select id="awakeningAttr" onchange="updateAll()"></select>
+        <label for="awakeningTrack">Starting Cost Track +1</label>
+        <select id="awakeningTrack" onchange="updateAll()">
+          <option value="Stress">Stress</option>
+          <option value="Exposure">Exposure</option>
+          <option value="Attention">Attention</option>
+          <option value="Corruption">Corruption</option>
+        </select>
+        <p class="small-note">The selected Attribute gains +1, up to the normal starting maximum. The chosen Track begins with 1 marked Cost.</p>
+      </div>
+
+      <div class="card span-6">
+        <div class="section-title">
+          <h2>Step 4: Skills</h2>
+          <span id="skillStatus" class="hint">Choose six skills at 1 and one skill at 2.</span>
+        </div>
+        <div id="skills"></div>
+        <p class="small-note">All other Skills begin at 0.</p>
+      </div>
+
+      <div class="card span-6">
+        <div class="section-title">
+          <h2>Step 5: Psychic Ability</h2>
+          <span class="hint">All psychic abilities are Haunting Actions.</span>
+        </div>
+        <label for="psychic">Choose One Ability</label>
+        <select id="psychic" onchange="updatePsychicInfo()"></select>
+        <div class="pill" style="text-align:left; margin-top:12px;">
+          <strong id="psychicRoll" style="font-size:1rem;">Roll</strong>
+          <p id="psychicDesc" style="margin:8px 0 0;"></p>
+          <p id="psychicCost" class="small-note"></p>
+        </div>
+        <div class="section-title" style="margin-top:18px;">
+          <h2>Step 6: Tools and Notes</h2>
+        </div>
+        <label for="gear">Investigative Tools / Gear</label>
+        <textarea id="gear" placeholder="Recorder, flashlight, old case files, phone, notebook, camera..."></textarea>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 7: Tracks</h2>
+          <span class="hint">Tracks measure pressure, not hit points.</span>
+        </div>
+        <div id="tracks"></div>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 8: Current Case Notes</h2>
+          <span class="hint">Optional investigation workspace.</span>
+        </div>
+        <div class="two-col">
+          <div>
+            <label for="caseName">Case / Haunt Name</label>
+            <input id="caseName" placeholder="Room 214" />
+          </div>
+          <div>
+            <label for="caseLocation">Location</label>
+            <input id="caseLocation" placeholder="County hospital, abandoned wing" />
+          </div>
+        </div>
+        <label for="disturbance">Initial Disturbance</label>
+        <textarea id="disturbance" placeholder="What seems wrong at the start of the case?"></textarea>
+        <div class="two-col">
+          <div>
+            <label for="anchor">Anchor Clues</label>
+            <textarea id="anchor" placeholder="What may bind the Pattern to reality?"></textarea>
+          </div>
+          <div>
+            <label for="feed">Feed Clues</label>
+            <textarea id="feed" placeholder="What may sustain the Pattern?"></textarea>
+          </div>
+          <div>
+            <label for="trigger">Trigger Clues</label>
+            <textarea id="trigger" placeholder="What causes the haunting to manifest?"></textarea>
+          </div>
+          <div>
+            <label for="notes">Evidence / Witness Notes</label>
+            <textarea id="notes" placeholder="Names, events, records, impressions, contradictions..."></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="print-sheet" id="printSheet"></section>
+  </main>
+
+  <script>
+    const attributeInfo = {
+      Presence: "Noticeability, social weight, narrative gravity",
+      Intellect: "Reason, cognition, pattern analysis",
+      Instinct: "Perception, intuition, situational sense",
+      Resolve: "Stability, grounding, recovery",
+      Will: "Identity, self-definition, resistance",
+      Power: "Haunting sensitivity and interference"
+    };
+
+    const skills = [
+      "Awareness", "Athletics", "Computers", "Drive", "Firearms", "Investigation",
+      "Medicine", "Persuasion", "Research", "Skullduggery", "Stealth", "Streetwise"
+    ];
+
+    const psychicAbilities = {
+      Mediumship: {
+        roll: "Power + Presence",
+        cost: "Base Cost: 2 Stress + 1 Attention",
+        desc: "Communicate directly with entities, lingering presences, or the dead."
+      },
+      Clairvoyance: {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "See spirits, manifestations, or supernatural disturbances invisible to normal perception."
+      },
+      Clairsentience: {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "Sense emotional states, presence, or intent from supernatural entities."
+      },
+      Clairaudience: {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "Hear disembodied voices, whispers, sounds, or disturbances."
+      },
+      Psychometry: {
+        roll: "Power + Investigation",
+        cost: "Base Cost: 1 Stress + 1 Exposure",
+        desc: "Sense memories, emotions, or supernatural residue through physical objects."
+      },
+      Retrocognition: {
+        roll: "Power + Investigation",
+        cost: "Base Cost: 1 Stress + 1 Exposure",
+        desc: "Perceive echoes of past events tied to a location or Pattern."
+      },
+      "Spirit Tracking": {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress",
+        desc: "Follow supernatural trails, disturbances, or movement left behind by a manifestation."
+      },
+      "Aura Reading": {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "Perceive spiritual influence surrounding people, objects, or locations."
+      }
+    };
+
+    const state = {
+      attrs: {},
+      skills: {},
+      markedTracks: { Stress: 0, Exposure: 0, Attention: 0, Corruption: 0 }
+    };
+
+    function init() {
+      Object.keys(attributeInfo).forEach(a => state.attrs[a] = 1);
+      skills.forEach(s => state.skills[s] = 0);
+
+      const attrSelect = document.getElementById("awakeningAttr");
+      Object.keys(attributeInfo).forEach(a => {
+        const opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        attrSelect.appendChild(opt);
+      });
+
+      const psychicSelect = document.getElementById("psychic");
+      Object.keys(psychicAbilities).forEach(a => {
+        const opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        psychicSelect.appendChild(opt);
+      });
+
+      renderAttributes();
+      renderSkills();
+      updateAll();
+      updatePsychicInfo();
+      ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "gear", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes"].forEach(id => {
+        document.getElementById(id).addEventListener("input", updatePrintSheet);
+      });
+    }
+
+    function renderAttributes() {
+      const wrap = document.getElementById("attributes");
+      wrap.innerHTML = "";
+      Object.entries(attributeInfo).forEach(([name, desc]) => {
+        const row = document.createElement("div");
+        row.className = "attr-row";
+        row.innerHTML = `
+          <div class="name"><strong>${name}</strong><span>${desc}</span></div>
+          <div class="stepper">
+            <button type="button" onclick="changeAttr('${name}', -1)">−</button>
+            <div class="value" id="attr-${name}">1</div>
+            <button type="button" onclick="changeAttr('${name}', 1)">+</button>
+          </div>
+          <div class="hint" id="final-${name}">Final 1</div>
+        `;
+        wrap.appendChild(row);
+      });
+    }
+
+    function renderSkills() {
+      const wrap = document.getElementById("skills");
+      wrap.innerHTML = "";
+      skills.forEach(name => {
+        const row = document.createElement("div");
+        row.className = "skill-row";
+        row.innerHTML = `
+          <div class="name"><strong>${name}</strong></div>
+          <div class="stepper">
+            <button type="button" onclick="changeSkill('${name}', -1)">−</button>
+            <div class="value" id="skill-${name}">0</div>
+            <button type="button" onclick="changeSkill('${name}', 1)">+</button>
+          </div>
+          <div class="hint"></div>
+        `;
+        wrap.appendChild(row);
+      });
+    }
+
+    function changeAttr(name, delta) {
+      const next = state.attrs[name] + delta;
+      if (next < 1 || next > 3) return;
+      const currentSpent = getAttrSpent();
+      if (delta > 0 && currentSpent >= 6) return;
+      state.attrs[name] = next;
+      updateAll();
+    }
+
+    function changeSkill(name, delta) {
+      const next = state.skills[name] + delta;
+      if (next < 0 || next > 2) return;
+      state.skills[name] = next;
+      updateAll();
+    }
+
+    function getAttrSpent() {
+      return Object.values(state.attrs).reduce((sum, v) => sum + (v - 1), 0);
+    }
+
+    function getFinalAttr(name) {
+      const awakened = document.getElementById("awakeningAttr").value;
+      return state.attrs[name] + (awakened === name && state.attrs[name] < 3 ? 1 : 0);
+    }
+
+    function updateAll() {
+      Object.keys(state.attrs).forEach(name => {
+        document.getElementById(`attr-${name}`).textContent = state.attrs[name];
+        document.getElementById(`final-${name}`).textContent = `Final ${getFinalAttr(name)}`;
+      });
+
+      const spent = getAttrSpent();
+      document.getElementById("attrSpent").textContent = spent;
+      document.getElementById("attrRemain").textContent = 6 - spent;
+      const attrStatus = document.getElementById("attrStatus");
+      attrStatus.textContent = spent === 6 ? "Attributes complete." : `Spend ${6 - spent} more Attribute point(s).`;
+      attrStatus.className = spent === 6 ? "hint ok" : "hint warn";
+
+      skills.forEach(name => document.getElementById(`skill-${name}`).textContent = state.skills[name]);
+      const oneRanks = Object.values(state.skills).filter(v => v === 1).length;
+      const twoRanks = Object.values(state.skills).filter(v => v === 2).length;
+      const skillStatus = document.getElementById("skillStatus");
+      if (oneRanks === 6 && twoRanks === 1) {
+        skillStatus.textContent = "Skills complete.";
+        skillStatus.className = "hint ok";
+      } else {
+        skillStatus.textContent = `Need six at 1 and one at 2. Current: ${oneRanks} at 1, ${twoRanks} at 2.`;
+        skillStatus.className = "hint warn";
+      }
+
+      renderTracks();
+      updatePrintSheet();
+    }
+
+    function getTrackMax(track) {
+      const a = {
+        Stress: getFinalAttr("Will") + getFinalAttr("Resolve"),
+        Exposure: getFinalAttr("Presence") + getFinalAttr("Instinct"),
+        Attention: getFinalAttr("Power") + getFinalAttr("Instinct"),
+        Corruption: getFinalAttr("Power") + getFinalAttr("Will")
+      };
+      return a[track];
+    }
+
+    function renderTracks() {
+      const wrap = document.getElementById("tracks");
+      wrap.innerHTML = "";
+      ["Stress", "Exposure", "Attention", "Corruption"].forEach(track => {
+        const max = Math.max(1, getTrackMax(track));
+        const awakeningTrack = document.getElementById("awakeningTrack").value;
+        const startingMark = awakeningTrack === track ? 1 : 0;
+        if (state.markedTracks[track] < startingMark) state.markedTracks[track] = startingMark;
+        if (state.markedTracks[track] > max) state.markedTracks[track] = max;
+        const row = document.createElement("div");
+        row.className = "track-row";
+        row.innerHTML = `<div class="name"><strong>${track}</strong><span>${trackHelp(track)}</span></div><div class="track-boxes" id="boxes-${track}"></div><div class="hint">${state.markedTracks[track]} / ${max}</div>`;
+        wrap.appendChild(row);
+        const boxes = row.querySelector(`#boxes-${track}`);
+        for (let i = 1; i <= max; i++) {
+          const b = document.createElement("div");
+          b.className = "box" + (i <= state.markedTracks[track] ? " filled" : "") + (i === Math.ceil(max/2) ? " threshold" : "");
+          b.title = `${track} ${i}`;
+          b.onclick = () => {
+            state.markedTracks[track] = i === state.markedTracks[track] ? i - 1 : i;
+            if (document.getElementById("awakeningTrack").value === track && state.markedTracks[track] < 1) state.markedTracks[track] = 1;
+            updateAll();
+          };
+          boxes.appendChild(b);
+        }
+      });
+    }
+
+    function trackHelp(track) {
+      return {
+        Stress: "Mental and emotional strain",
+        Exposure: "Public visibility and scrutiny",
+        Attention: "Haunting and institutional notice",
+        Corruption: "Power asymmetry and transformation"
+      }[track];
+    }
+
+    function updatePsychicInfo() {
+      const ability = document.getElementById("psychic").value;
+      const data = psychicAbilities[ability];
+      document.getElementById("psychicRoll").textContent = data.roll;
+      document.getElementById("psychicDesc").textContent = data.desc;
+      document.getElementById("psychicCost").textContent = data.cost;
+      updatePrintSheet();
+    }
+
+    function formData() {
+      const ids = ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "awakeningAttr", "awakeningTrack", "psychic", "gear", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes"];
+      const data = { attrs: state.attrs, skills: state.skills, markedTracks: state.markedTracks };
+      ids.forEach(id => data[id] = document.getElementById(id).value);
+      return data;
+    }
+
+    function applyData(data) {
+      if (!data) return;
+      state.attrs = data.attrs || state.attrs;
+      state.skills = data.skills || state.skills;
+      state.markedTracks = data.markedTracks || state.markedTracks;
+      Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el && typeof data[id] === "string") el.value = data[id];
+      });
+      updateAll();
+      updatePsychicInfo();
+    }
+
+    function saveCharacter() {
+      localStorage.setItem("nocturnalCharacter", JSON.stringify(formData()));
+      alert("Character saved in this browser.");
+    }
+
+    function loadCharacter() {
+      const raw = localStorage.getItem("nocturnalCharacter");
+      if (!raw) return alert("No saved character found in this browser.");
+      applyData(JSON.parse(raw));
+    }
+
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(formData(), null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${document.getElementById("charName").value || "nocturnal-character"}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetCharacter() {
+      if (!confirm("Reset this character?")) return;
+      Object.keys(attributeInfo).forEach(a => state.attrs[a] = 1);
+      skills.forEach(s => state.skills[s] = 0);
+      state.markedTracks = { Stress: 0, Exposure: 0, Attention: 0, Corruption: 0 };
+      document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+      document.getElementById("awakeningAttr").selectedIndex = 0;
+      document.getElementById("awakeningTrack").selectedIndex = 0;
+      document.getElementById("psychic").selectedIndex = 0;
+      updateAll();
+      updatePsychicInfo();
+    }
+
+    function printSheet() {
+      updatePrintSheet();
+      window.print();
+    }
+
+    function updatePrintSheet() {
+      const d = formData();
+      const attrRows = Object.keys(attributeInfo).map(a => `<p><strong>${a}:</strong> ${getFinalAttr(a)}</p>`).join("");
+      const skillRows = skills.filter(s => state.skills[s] > 0).map(s => `<p><strong>${s}:</strong> ${state.skills[s]}</p>`).join("") || "<p>No trained Skills selected.</p>";
+      const trackRows = ["Stress", "Exposure", "Attention", "Corruption"].map(t => {
+        const max = getTrackMax(t);
+        let boxes = "";
+        for (let i = 1; i <= max; i++) boxes += "<span></span>";
+        return `<p><strong>${t}:</strong> ${state.markedTracks[t]} / ${max}</p><div class="print-boxes">${boxes}</div>`;
+      }).join("");
+      const p = psychicAbilities[d.psychic] || psychicAbilities.Mediumship;
+      document.getElementById("printSheet").innerHTML = `
+        <h1>Nocturnal Character Sheet</h1>
+        <div class="print-grid">
+          <div class="print-card"><h2>Investigator</h2><p><strong>Name:</strong> ${safe(d.charName)}</p><p><strong>Player:</strong> ${safe(d.playerName)}</p><p><strong>Occupation:</strong> ${safe(d.occupation)}</p><p><strong>Concept:</strong> ${safe(d.concept)}</p><p><strong>Faith / Conviction:</strong> ${safe(d.faith)}</p></div>
+          <div class="print-card"><h2>Awakening</h2><p><strong>Attribute:</strong> ${safe(d.awakeningAttr)} +1</p><p><strong>Starting Cost:</strong> ${safe(d.awakeningTrack)} +1</p><p>${safe(d.awakeningStory)}</p></div>
+          <div class="print-card"><h2>Attributes</h2>${attrRows}</div>
+          <div class="print-card"><h2>Skills</h2>${skillRows}</div>
+          <div class="print-card"><h2>Tracks</h2>${trackRows}</div>
+          <div class="print-card"><h2>Psychic Ability</h2><p><strong>${safe(d.psychic)}</strong></p><p>${safe(p.desc)}</p><p><strong>Roll:</strong> ${safe(p.roll)}</p><p><strong>${safe(p.cost)}</strong></p></div>
+          <div class="print-card"><h2>Tools / Gear</h2><p>${safe(d.gear)}</p></div>
+          <div class="print-card"><h2>Current Case</h2><p><strong>Case:</strong> ${safe(d.caseName)}</p><p><strong>Location:</strong> ${safe(d.caseLocation)}</p><p><strong>Disturbance:</strong> ${safe(d.disturbance)}</p></div>
+          <div class="print-card"><h2>Pattern Notes</h2><p><strong>Anchor:</strong> ${safe(d.anchor)}</p><p><strong>Feed:</strong> ${safe(d.feed)}</p><p><strong>Trigger:</strong> ${safe(d.trigger)}</p></div>
+          <div class="print-card"><h2>Evidence / Witness Notes</h2><p>${safe(d.notes)}</p></div>
+        </div>
+      `;
+    }
+
+    function safe(value) {
+      return (value || "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])).replace(/\n/g, "<br>");
+    }
+
+    init();
+  </script>
+</body>
+</html>
