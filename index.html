@@ -265,217 +265,47 @@
     }
 
     @media print {
-      @page {
-        size: letter;
-        margin: 0.45in;
-      }
-
-      html,
       body {
-        background: white !important;
-        color: var(--ink) !important;
-        font-size: 10pt;
-        line-height: 1.2;
+        background: white;
+        color: var(--ink);
       }
-
-      header,
-      main > .actions,
-      .screen-only {
-        display: none !important;
-      }
-
-      main {
-        width: 100%;
-        margin: 0;
-        display: block;
-      }
-
+      header, main > .actions, .screen-only { display: none !important; }
+      main { width: 100%; margin: 0; }
       .print-sheet {
-        display: block !important;
+        display: block;
         color: var(--ink);
         background: white;
         font-family: Georgia, "Times New Roman", serif;
       }
-
-      .print-page {
-        display: block;
-        break-inside: avoid;
-        page-break-inside: avoid;
-        margin: 0;
-        padding: 0;
-      }
-
-      .print-page + .print-page {
-        break-before: page;
-        page-break-before: always;
-      }
-
-      .print-header {
-        border: 2px solid #111;
-        padding: 7px 10px;
-        margin: 0 0 8px;
-        text-align: center;
-      }
-
-      .print-header h1 {
-        font-size: 20pt;
-        letter-spacing: 0.14em;
-        margin: 0;
-        color: #111;
-        text-shadow: none;
-      }
-
-      .print-header p {
-        margin: 2px 0 0;
-        font-size: 8.5pt;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .print-sheet h1,
-      .print-sheet h2,
-      .print-sheet h3 {
+      .print-sheet h1, .print-sheet h2, .print-sheet h3 {
         color: var(--ink);
         text-shadow: none;
       }
-
-      .print-grid,
-      .print-main-grid,
-      .print-case-grid,
-      .print-advancement-grid {
+      .print-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 7px;
-        align-items: start;
+        gap: 12px;
       }
-
-      .print-stack {
-        display: grid;
-        gap: 7px;
-        align-content: start;
-      }
-
       .print-card {
-        border: 1.25px solid #222;
-        padding: 6px 7px;
-        margin: 0;
+        border: 1px solid #222;
+        padding: 10px;
+        margin-bottom: 10px;
         break-inside: avoid;
-        page-break-inside: avoid;
-        min-height: auto;
       }
-
-      .print-card.full {
-        grid-column: 1 / -1;
-      }
-
-      .print-card h2 {
-        font-size: 9pt;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        border-bottom: 1px solid #222;
-        padding-bottom: 2px;
-        margin: 0 0 5px;
-      }
-
-      .print-card p {
-        margin: 1px 0 3px;
-      }
-
-      .print-field {
-        display: grid;
-        grid-template-columns: 0.72in 1fr;
-        gap: 5px;
-        align-items: end;
-        margin-bottom: 4px;
-      }
-
-      .print-label {
-        font-weight: bold;
-        font-size: 8pt;
-        text-transform: uppercase;
-      }
-
       .print-line {
         border-bottom: 1px solid #222;
-        min-height: 14px;
-        padding: 0 2px 1px;
+        min-height: 24px;
+        padding-top: 4px;
       }
-
-      .print-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 8.6pt;
-      }
-
-      .print-table th,
-      .print-table td {
-        border-bottom: 1px solid #bbb;
-        padding: 2px;
-        text-align: left;
-        vertical-align: top;
-      }
-
-      .print-table th:last-child,
-      .print-table td:last-child {
-        text-align: center;
-        width: 0.42in;
-      }
-
-      .print-track {
-        margin-bottom: 5px;
-      }
-
-      .print-track-title {
-        display: flex;
-        justify-content: space-between;
-        font-weight: bold;
-        margin-bottom: 2px;
-      }
-
       .print-boxes span {
         display: inline-block;
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
         border: 1px solid #222;
-        margin-right: 3px;
-        vertical-align: middle;
+        margin-right: 4px;
       }
-
-      .print-boxes span.marked {
-        background: #222;
-      }
-
-      .print-boxes span.threshold {
-        border-right: 3px solid #222;
-      }
-
-      .print-notes {
-        min-height: 42px;
-        border: 1px solid #999;
-        padding: 4px;
-        white-space: normal;
-      }
-
-      .print-notes.large {
-        min-height: 62px;
-      }
-
-      .case-page .print-notes {
-        min-height: 88px;
-      }
-
-      .case-page .print-notes.large {
-        min-height: 130px;
-      }
-
-      .advancement-page .print-notes {
-        min-height: 78px;
-      }
-
-      .advancement-page .print-notes.large {
-        min-height: 108px;
-      }
-    }  </style>
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -489,8 +319,6 @@
       <button onclick="saveCharacter()">Save to Browser</button>
       <button onclick="loadCharacter()">Load Saved</button>
       <button onclick="downloadJSON()">Export JSON</button>
-      <button onclick="importJSON()">Import JSON</button>
-      <input id="jsonImport" type="file" accept="application/json,.json" style="display:none" onchange="handleJSONImport(event)" />
       <button onclick="resetCharacter()">Reset</button>
     </section>
 
@@ -525,14 +353,14 @@
       <div class="card span-8">
         <div class="section-title">
           <h2>Step 2: Attributes</h2>
-          <span id="attrStatus" class="hint">Spend 6 starting points. Later advancement can raise Attributes.</span>
+          <span id="attrStatus" class="hint">Spend 6 points. Max 3 before Awakening.</span>
         </div>
         <div id="attributes"></div>
         <div class="status">
           <div class="pill">Points Spent<strong id="attrSpent">0</strong></div>
-          <div class="pill">Starting Remaining<strong id="attrRemain">6</strong></div>
+          <div class="pill">Remaining<strong id="attrRemain">6</strong></div>
           <div class="pill">Base Total<strong>6</strong></div>
-          <div class="pill">Current Max<strong>10</strong></div>
+          <div class="pill">Starting Max<strong>3</strong></div>
         </div>
       </div>
 
@@ -558,10 +386,10 @@
       <div class="card span-6">
         <div class="section-title">
           <h2>Step 4: Skills</h2>
-          <span id="skillStatus" class="hint">Choose starting Skills, then add advancement ranks as play continues.</span>
+          <span id="skillStatus" class="hint">Choose six skills at 1 and one skill at 2.</span>
         </div>
         <div id="skills"></div>
-        <p class="small-note">Starting characters choose six Skills at 1 and one Skill at 2. Advancement can raise Skills later.</p>
+        <p class="small-note">All other Skills begin at 0.</p>
       </div>
 
       <div class="card span-6">
@@ -582,30 +410,6 @@
         <label for="gear">Investigative Tools / Gear</label>
         <textarea id="gear" placeholder="Recorder, flashlight, old case files, phone, notebook, camera..."></textarea>
       </div>
-
-      <div class="card span-6">
-        <div class="section-title">
-          <h2>Step 6: Faith as Authority</h2>
-          <span class="hint">Conviction can impose meaning onto the supernatural.</span>
-        </div>
-        <p class="small-note">Faith does not have to be religious. It may be religion, scientific certainty, moral duty, philosophy, ancestral belief, or personal conviction.</p>
-        <label for="faithPrinciples">Sacred Principle / Core Rule</label>
-        <textarea id="faithPrinciples" placeholder="What principle does your investigator believe reality must obey?"></textarea>
-        <div class="status" style="grid-template-columns: repeat(2, 1fr);">
-          <div class="pill" style="text-align:left;">
-            <strong style="font-size:1rem;">Binding Through Faith</strong>
-            <p class="small-note">Roll: Power + Presence or Power + Persuasion</p>
-          </div>
-          <div class="pill" style="text-align:left;">
-            <strong style="font-size:1rem;">Banishment Through Faith</strong>
-            <p class="small-note">Roll: Power + Will or Power + Resolve</p>
-          </div>
-        </div>
-        <p class="small-note">Faith-based actions generate Corruption and may generate Attention from forces aligned with or opposed to the belief being invoked.</p>
-        <label for="faithNotes">Faith Notes / Tests / Crisis</label>
-        <textarea id="faithNotes" placeholder="Contradictions, vows, moments of crisis, affirmations, or consequences from using Faith."></textarea>
-      </div>
-
 
       <div class="card span-12">
         <div class="section-title">
@@ -650,33 +454,6 @@
             <textarea id="notes" placeholder="Names, events, records, impressions, contradictions..."></textarea>
           </div>
         </div>
-      </div>
-
-      <div class="card span-12">
-        <div class="section-title">
-          <h2>Step 9: Advancement & Lasting Change</h2>
-          <span class="hint">Growth in Nocturnal comes through pressure, consequence, and definition.</span>
-        </div>
-        <div class="two-col">
-          <div>
-            <label for="stabilizedCapabilities">Stabilized Capabilities</label>
-            <textarea id="stabilizedCapabilities" placeholder="Reliable methods learned through repeated use, cost, and consequence. Example: Pattern mapping, safe ward procedure, EVP interpretation."></textarea>
-          </div>
-          <div>
-            <label for="lastingChanges">Lasting Changes</label>
-            <textarea id="lastingChanges" placeholder="Permanent marks, scars, altered behavior, changed access, or Pattern influence that remains after a case."></textarea>
-          </div>
-          <div>
-            <label for="factionAlignment">Faction Alignment / Oversight</label>
-            <textarea id="factionAlignment" placeholder="Organizations, contacts, obligations, restrictions, or protection gained through play."></textarea>
-          </div>
-          <div>
-            <label for="majorCases">Major Cases Survived</label>
-            <textarea id="majorCases" placeholder="Case name, outcome, and consequence. Example: Room 214, Pattern collapsed, hospital records altered."></textarea>
-          </div>
-        </div>
-        <label for="thresholdEvents">Threshold Events</label>
-        <textarea id="thresholdEvents" placeholder="Track thresholds crossed, full Track states survived, sacrifices made, or moments that changed the character."></textarea>
       </div>
     </section>
 
@@ -741,11 +518,6 @@
       }
     };
 
-    const STARTING_ATTRIBUTE_POINTS = 6;
-    const STARTING_SKILL_RANKS = 8;
-    const ATTRIBUTE_MAX = 10;
-    const SKILL_MAX = 5;
-
     const state = {
       attrs: {},
       skills: {},
@@ -776,7 +548,7 @@
       renderSkills();
       updateAll();
       updatePsychicInfo();
-      ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "gear", "faithPrinciples", "faithNotes", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes", "stabilizedCapabilities", "lastingChanges", "factionAlignment", "majorCases", "thresholdEvents"].forEach(id => {
+      ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "gear", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes"].forEach(id => {
         document.getElementById(id).addEventListener("input", updatePrintSheet);
       });
     }
@@ -821,14 +593,16 @@
 
     function changeAttr(name, delta) {
       const next = state.attrs[name] + delta;
-      if (next < 1 || next > ATTRIBUTE_MAX) return;
+      if (next < 1 || next > 3) return;
+      const currentSpent = getAttrSpent();
+      if (delta > 0 && currentSpent >= 6) return;
       state.attrs[name] = next;
       updateAll();
     }
 
     function changeSkill(name, delta) {
       const next = state.skills[name] + delta;
-      if (next < 0 || next > SKILL_MAX) return;
+      if (next < 0 || next > 2) return;
       state.skills[name] = next;
       updateAll();
     }
@@ -839,7 +613,7 @@
 
     function getFinalAttr(name) {
       const awakened = document.getElementById("awakeningAttr").value;
-      return Math.min(ATTRIBUTE_MAX, state.attrs[name] + (awakened === name ? 1 : 0));
+      return state.attrs[name] + (awakened === name && state.attrs[name] < 3 ? 1 : 0);
     }
 
     function updateAll() {
@@ -849,39 +623,21 @@
       });
 
       const spent = getAttrSpent();
-      const attrAdvancement = Math.max(0, spent - STARTING_ATTRIBUTE_POINTS);
-      const attrRemaining = Math.max(0, STARTING_ATTRIBUTE_POINTS - spent);
       document.getElementById("attrSpent").textContent = spent;
-      document.getElementById("attrRemain").textContent = attrRemaining;
+      document.getElementById("attrRemain").textContent = 6 - spent;
       const attrStatus = document.getElementById("attrStatus");
-      if (spent < STARTING_ATTRIBUTE_POINTS) {
-        attrStatus.textContent = `Spend ${attrRemaining} more starting Attribute point(s).`;
-        attrStatus.className = "hint warn";
-      } else if (attrAdvancement > 0) {
-        attrStatus.textContent = `Starting Attributes complete. Advancement Attribute increases added: ${attrAdvancement}.`;
-        attrStatus.className = "hint ok";
-      } else {
-        attrStatus.textContent = "Starting Attributes complete.";
-        attrStatus.className = "hint ok";
-      }
+      attrStatus.textContent = spent === 6 ? "Attributes complete." : `Spend ${6 - spent} more Attribute point(s).`;
+      attrStatus.className = spent === 6 ? "hint ok" : "hint warn";
 
       skills.forEach(name => document.getElementById(`skill-${name}`).textContent = state.skills[name]);
       const oneRanks = Object.values(state.skills).filter(v => v === 1).length;
-      const twoOrHigherRanks = Object.values(state.skills).filter(v => v >= 2).length;
-      const totalSkillRanks = Object.values(state.skills).reduce((sum, v) => sum + v, 0);
-      const skillAdvancement = Math.max(0, totalSkillRanks - STARTING_SKILL_RANKS);
+      const twoRanks = Object.values(state.skills).filter(v => v === 2).length;
       const skillStatus = document.getElementById("skillStatus");
-      if (totalSkillRanks < STARTING_SKILL_RANKS) {
-        skillStatus.textContent = `Assign ${STARTING_SKILL_RANKS - totalSkillRanks} more starting Skill rank(s). Starting guide: six Skills at 1 and one Skill at 2.`;
-        skillStatus.className = "hint warn";
-      } else if (skillAdvancement > 0) {
-        skillStatus.textContent = `Starting Skills complete. Advancement Skill ranks added: ${skillAdvancement}.`;
-        skillStatus.className = "hint ok";
-      } else if (oneRanks >= 6 && twoOrHigherRanks >= 1) {
-        skillStatus.textContent = "Starting Skills complete.";
+      if (oneRanks === 6 && twoRanks === 1) {
+        skillStatus.textContent = "Skills complete.";
         skillStatus.className = "hint ok";
       } else {
-        skillStatus.textContent = `Starting guide: six Skills at 1 and one Skill at 2. Current total ranks: ${totalSkillRanks}.`;
+        skillStatus.textContent = `Need six at 1 and one at 2. Current: ${oneRanks} at 1, ${twoRanks} at 2.`;
         skillStatus.className = "hint warn";
       }
 
@@ -906,8 +662,7 @@
         const max = Math.max(1, getTrackMax(track));
         const awakeningTrack = document.getElementById("awakeningTrack").value;
         const startingMark = awakeningTrack === track ? 1 : 0;
-        // Starting Cost reflects where the character began, but it can be recovered during play.
-        if (state.markedTracks[track] < 0) state.markedTracks[track] = 0;
+        if (state.markedTracks[track] < startingMark) state.markedTracks[track] = startingMark;
         if (state.markedTracks[track] > max) state.markedTracks[track] = max;
         const row = document.createElement("div");
         row.className = "track-row";
@@ -920,7 +675,7 @@
           b.title = `${track} ${i}`;
           b.onclick = () => {
             state.markedTracks[track] = i === state.markedTracks[track] ? i - 1 : i;
-            if (state.markedTracks[track] < 0) state.markedTracks[track] = 0;
+            if (document.getElementById("awakeningTrack").value === track && state.markedTracks[track] < 1) state.markedTracks[track] = 1;
             updateAll();
           };
           boxes.appendChild(b);
@@ -947,35 +702,21 @@
     }
 
     function formData() {
-      const ids = ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "awakeningAttr", "awakeningTrack", "psychic", "gear", "faithPrinciples", "faithNotes", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes", "stabilizedCapabilities", "lastingChanges", "factionAlignment", "majorCases", "thresholdEvents"];
+      const ids = ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "awakeningAttr", "awakeningTrack", "psychic", "gear", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes"];
       const data = { attrs: state.attrs, skills: state.skills, markedTracks: state.markedTracks };
       ids.forEach(id => data[id] = document.getElementById(id).value);
       return data;
     }
 
     function applyData(data) {
-      if (!data || typeof data !== "object") return;
-
-      Object.keys(attributeInfo).forEach(attr => {
-        const value = data.attrs && Number.isFinite(Number(data.attrs[attr])) ? Number(data.attrs[attr]) : state.attrs[attr];
-        state.attrs[attr] = Math.min(ATTRIBUTE_MAX, Math.max(1, value));
-      });
-
-      skills.forEach(skill => {
-        const value = data.skills && Number.isFinite(Number(data.skills[skill])) ? Number(data.skills[skill]) : state.skills[skill];
-        state.skills[skill] = Math.min(SKILL_MAX, Math.max(0, value));
-      });
-
-      ["Stress", "Exposure", "Attention", "Corruption"].forEach(track => {
-        const value = data.markedTracks && Number.isFinite(Number(data.markedTracks[track])) ? Number(data.markedTracks[track]) : state.markedTracks[track];
-        state.markedTracks[track] = Math.max(0, value);
-      });
-
+      if (!data) return;
+      state.attrs = data.attrs || state.attrs;
+      state.skills = data.skills || state.skills;
+      state.markedTracks = data.markedTracks || state.markedTracks;
       Object.keys(data).forEach(id => {
         const el = document.getElementById(id);
         if (el && typeof data[id] === "string") el.value = data[id];
       });
-
       updateAll();
       updatePsychicInfo();
     }
@@ -1001,32 +742,6 @@
       URL.revokeObjectURL(url);
     }
 
-    function importJSON() {
-      const input = document.getElementById("jsonImport");
-      input.value = "";
-      input.click();
-    }
-
-    function handleJSONImport(event) {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          applyData(data);
-          alert("Character imported successfully.");
-        } catch (error) {
-          alert("This file could not be imported. Please select a valid Nocturnal character JSON file.");
-        }
-      };
-      reader.onerror = function() {
-        alert("The selected file could not be read.");
-      };
-      reader.readAsText(file);
-    }
-
     function resetCharacter() {
       if (!confirm("Reset this character?")) return;
       Object.keys(attributeInfo).forEach(a => state.attrs[a] = 1);
@@ -1047,192 +762,28 @@
 
     function updatePrintSheet() {
       const d = formData();
-
-      const attrRows = Object.keys(attributeInfo)
-        .map(a => `<tr><td>${a}</td><td>${attributeInfo[a]}</td><td>${getFinalAttr(a)}</td></tr>`)
-        .join("");
-
-      const skillRows = skills
-        .map(s => `<tr><td>${s}</td><td>${state.skills[s]}</td></tr>`)
-        .join("");
-
+      const attrRows = Object.keys(attributeInfo).map(a => `<p><strong>${a}:</strong> ${getFinalAttr(a)}</p>`).join("");
+      const skillRows = skills.filter(s => state.skills[s] > 0).map(s => `<p><strong>${s}:</strong> ${state.skills[s]}</p>`).join("") || "<p>No trained Skills selected.</p>";
       const trackRows = ["Stress", "Exposure", "Attention", "Corruption"].map(t => {
         const max = getTrackMax(t);
         let boxes = "";
-        for (let i = 1; i <= max; i++) {
-          const marked = i <= state.markedTracks[t] ? " marked" : "";
-          const threshold = i === Math.ceil(max / 2) ? " threshold" : "";
-          boxes += `<span class="${marked}${threshold}"></span>`;
-        }
-        return `<div class="print-track"><div class="print-track-title"><span>${t}</span><span>${state.markedTracks[t]} / ${max}</span></div><div class="print-boxes">${boxes}</div></div>`;
+        for (let i = 1; i <= max; i++) boxes += "<span></span>";
+        return `<p><strong>${t}:</strong> ${state.markedTracks[t]} / ${max}</p><div class="print-boxes">${boxes}</div>`;
       }).join("");
-
       const p = psychicAbilities[d.psychic] || psychicAbilities.Mediumship;
-
       document.getElementById("printSheet").innerHTML = `
-        <div class="print-page">
-          <div class="print-header">
-            <h1>NOCTURNAL</h1>
-            <p>A Modern Ghost-Hunting RPG Investigator Sheet</p>
-          </div>
-
-          <div class="print-card full compact">
-            <h2>Investigator Identity</h2>
-            <div class="print-grid">
-              <div>
-                <div class="print-field"><div class="print-label">Name</div><div class="print-line">${safe(d.charName)}</div></div>
-                <div class="print-field"><div class="print-label">Player</div><div class="print-line">${safe(d.playerName)}</div></div>
-                <div class="print-field"><div class="print-label">Occupation</div><div class="print-line">${safe(d.occupation)}</div></div>
-              </div>
-              <div>
-                <div class="print-field"><div class="print-label">Concept</div><div class="print-line">${safe(d.concept)}</div></div>
-                <div class="print-field"><div class="print-label">Faith</div><div class="print-line">${safe(d.faith)}</div></div>
-                <div class="print-field"><div class="print-label">Psychic</div><div class="print-line">${safe(d.psychic)}</div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="print-main-grid" style="margin-top:8px;">
-            <div class="print-stack">
-              <div class="print-card compact">
-                <h2>Attributes</h2>
-                <table class="print-table">
-                  <thead><tr><th>Attribute</th><th>Use</th><th>Rating</th></tr></thead>
-                  <tbody>${attrRows}</tbody>
-                </table>
-              </div>
-
-              <div class="print-card compact">
-                <h2>Skills</h2>
-                <table class="print-table">
-                  <thead><tr><th>Skill</th><th>Rank</th></tr></thead>
-                  <tbody>${skillRows}</tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="print-stack">
-              <div class="print-card compact">
-                <h2>Tracks</h2>
-                ${trackRows}
-              </div>
-
-              <div class="print-card compact">
-                <h2>Awakening</h2>
-                <p><strong>Awakening Attribute:</strong> ${safe(d.awakeningAttr)} +1</p>
-                <p><strong>Starting Cost:</strong> ${safe(d.awakeningTrack)} +1</p>
-                <div class="print-notes large">${safe(d.awakeningStory)}</div>
-              </div>
-
-              <div class="print-card compact">
-                <h2>Psychic Ability</h2>
-                <p><strong>${safe(d.psychic)}</strong></p>
-                <p>${safe(p.desc)}</p>
-                <p><strong>Roll:</strong> ${safe(p.roll)}</p>
-                <p><strong>${safe(p.cost)}</strong></p>
-              </div>
-
-              <div class="print-card compact">
-                <h2>Faith as Authority</h2>
-                <p><strong>Binding:</strong> Power + Presence or Power + Persuasion</p>
-                <p><strong>Banishment:</strong> Power + Will or Power + Resolve</p>
-                <p><strong>Cost:</strong> Generates Corruption and may generate Attention.</p>
-                <p><strong>Sacred Principle / Core Rule</strong></p>
-                <div class="print-notes">${safe(d.faithPrinciples)}</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="print-page case-page">
-          <div class="print-header">
-            <h1>CURRENT CASE</h1>
-            <p>Haunt Investigation Workspace</p>
-          </div>
-
-          <div class="print-card full compact">
-            <h2>Case Identity</h2>
-            <div class="print-grid">
-              <div class="print-field"><div class="print-label">Case</div><div class="print-line">${safe(d.caseName)}</div></div>
-              <div class="print-field"><div class="print-label">Location</div><div class="print-line">${safe(d.caseLocation)}</div></div>
-            </div>
-          </div>
-
-          <div class="print-case-grid" style="margin-top:8px;">
-            <div class="print-stack">
-              <div class="print-card compact">
-                <h2>Initial Disturbance</h2>
-                <div class="print-notes large">${safe(d.disturbance)}</div>
-              </div>
-              <div class="print-card compact">
-                <h2>Evidence / Witness Notes</h2>
-                <div class="print-notes large">${safe(d.notes)}</div>
-              </div>
-            </div>
-            <div class="print-stack">
-              <div class="print-card compact">
-                <h2>Anchor</h2>
-                <div class="print-notes">${safe(d.anchor)}</div>
-              </div>
-              <div class="print-card compact">
-                <h2>Feed</h2>
-                <div class="print-notes">${safe(d.feed)}</div>
-              </div>
-              <div class="print-card compact">
-                <h2>Trigger</h2>
-                <div class="print-notes">${safe(d.trigger)}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="print-page advancement-page">
-          <div class="print-header">
-            <h1>ADVANCEMENT</h1>
-            <p>Lasting Change and Campaign Consequences</p>
-          </div>
-
-          <div class="print-card full compact">
-            <h2>Investigator Field Notes</h2>
-            <div class="print-grid">
-              <div>
-                <p><strong>Tools / Gear</strong></p>
-                <div class="print-notes">${safe(d.gear)}</div>
-              </div>
-              <div>
-                <p><strong>Faith Notes / Tests / Crisis</strong></p>
-                <div class="print-notes">${safe(d.faithNotes)}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="print-advancement-grid" style="margin-top:8px;">
-            <div class="print-stack">
-              <div class="print-card compact">
-                <h2>Stabilized Capabilities</h2>
-                <div class="print-notes large">${safe(d.stabilizedCapabilities)}</div>
-              </div>
-              <div class="print-card compact">
-                <h2>Faction Alignment / Oversight</h2>
-                <div class="print-notes large">${safe(d.factionAlignment)}</div>
-              </div>
-              <div class="print-card compact">
-                <h2>Major Cases Survived</h2>
-                <div class="print-notes large">${safe(d.majorCases)}</div>
-              </div>
-            </div>
-            <div class="print-stack">
-              <div class="print-card compact">
-                <h2>Lasting Changes</h2>
-                <div class="print-notes large">${safe(d.lastingChanges)}</div>
-              </div>
-              <div class="print-card compact">
-                <h2>Threshold Events</h2>
-                <div class="print-notes large">${safe(d.thresholdEvents)}</div>
-              </div>
-            </div>
-          </div>
+        <h1>Nocturnal Character Sheet</h1>
+        <div class="print-grid">
+          <div class="print-card"><h2>Investigator</h2><p><strong>Name:</strong> ${safe(d.charName)}</p><p><strong>Player:</strong> ${safe(d.playerName)}</p><p><strong>Occupation:</strong> ${safe(d.occupation)}</p><p><strong>Concept:</strong> ${safe(d.concept)}</p><p><strong>Faith / Conviction:</strong> ${safe(d.faith)}</p></div>
+          <div class="print-card"><h2>Awakening</h2><p><strong>Attribute:</strong> ${safe(d.awakeningAttr)} +1</p><p><strong>Starting Cost:</strong> ${safe(d.awakeningTrack)} +1</p><p>${safe(d.awakeningStory)}</p></div>
+          <div class="print-card"><h2>Attributes</h2>${attrRows}</div>
+          <div class="print-card"><h2>Skills</h2>${skillRows}</div>
+          <div class="print-card"><h2>Tracks</h2>${trackRows}</div>
+          <div class="print-card"><h2>Psychic Ability</h2><p><strong>${safe(d.psychic)}</strong></p><p>${safe(p.desc)}</p><p><strong>Roll:</strong> ${safe(p.roll)}</p><p><strong>${safe(p.cost)}</strong></p></div>
+          <div class="print-card"><h2>Tools / Gear</h2><p>${safe(d.gear)}</p></div>
+          <div class="print-card"><h2>Current Case</h2><p><strong>Case:</strong> ${safe(d.caseName)}</p><p><strong>Location:</strong> ${safe(d.caseLocation)}</p><p><strong>Disturbance:</strong> ${safe(d.disturbance)}</p></div>
+          <div class="print-card"><h2>Pattern Notes</h2><p><strong>Anchor:</strong> ${safe(d.anchor)}</p><p><strong>Feed:</strong> ${safe(d.feed)}</p><p><strong>Trigger:</strong> ${safe(d.trigger)}</p></div>
+          <div class="print-card"><h2>Evidence / Witness Notes</h2><p>${safe(d.notes)}</p></div>
         </div>
       `;
     }
