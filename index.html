@@ -3,1463 +3,1245 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heroes of the 5th Age Character Manager</title>
-
+  <title>Nocturnal Character Creator</title>
   <style>
+    :root {
+      --bg: #0d0d0f;
+      --panel: #17171b;
+      --panel-2: #202027;
+      --text: #f0ece4;
+      --muted: #b9b0a2;
+      --red: #9e1f2f;
+      --red-2: #c42d3d;
+      --line: #39343a;
+      --good: #90b48a;
+      --warn: #d7aa55;
+      --bad: #c75c5c;
+      --paper: #f4efe4;
+      --ink: #151515;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      background: #0f172a;
-      color: #e2e8f0;
-      font-family: Arial, sans-serif;
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(circle at top, #191922 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.5;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
+    header {
+      padding: 32px 20px 18px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #111116, #0d0d0f);
     }
 
-    .card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: var(--text);
+      text-shadow: 0 0 22px rgba(158, 31, 47, 0.3);
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: var(--red-2);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    main {
+      width: min(1200px, 94vw);
+      margin: 24px auto 60px;
+      display: grid;
+      gap: 20px;
     }
 
     .grid {
       display: grid;
-      gap: 16px;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
     }
 
-    .grid-3 {
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    .card {
+      background: rgba(23, 23, 27, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
     }
 
-    .grid-6 {
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+
+    @media (max-width: 850px) {
+      .span-8, .span-6, .span-4 { grid-column: span 12; }
     }
 
-    input,
-    select,
-    button {
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title h2 {
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea, button {
       font: inherit;
     }
 
-    input,
-    select {
+    input, select, textarea {
       width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: #e2e8f0;
+      padding: 10px 11px;
       border-radius: 8px;
-      padding: 10px;
-      margin-top: 4px;
+      border: 1px solid var(--line);
+      background: #101014;
+      color: var(--text);
+      outline: none;
     }
 
-    button {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      cursor: pointer;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--red-2);
+      box-shadow: 0 0 0 3px rgba(196, 45, 61, 0.14);
     }
 
-    button:hover {
-      background: #1d4ed8;
+    textarea { min-height: 88px; resize: vertical; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
 
-    .button-red {
-      background: #b91c1c;
+    @media (max-width: 650px) {
+      .two-col { grid-template-columns: 1fr; }
     }
 
-    .button-red:hover {
-      background: #991b1b;
+    .attr-row, .skill-row, .track-row {
+      display: grid;
+      grid-template-columns: 1.4fr auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.08);
     }
 
-    .button-green {
-      background: #15803d;
-    }
+    .attr-row:last-child, .skill-row:last-child, .track-row:last-child { border-bottom: 0; }
 
-    .button-green:hover {
-      background: #166534;
-    }
+    .name strong { display: block; }
+    .name span { color: var(--muted); font-size: 0.82rem; }
 
-    .button-purple {
-      background: #7e22ce;
-    }
-
-    .button-purple:hover {
-      background: #6b21a8;
-    }
-
-    .stat {
-      background: #0f172a;
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .label {
-      color: #94a3b8;
-      font-size: 13px;
-    }
-
-    .big {
-      font-size: 34px;
-      font-weight: bold;
-      margin-top: 4px;
-    }
-
-    .dice-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .dice {
-      width: 48px;
-      height: 48px;
+    .stepper {
       display: flex;
       align-items: center;
-      justify-content: center;
-      border-radius: 12px;
+      gap: 7px;
+    }
+
+    .stepper button, .actions button {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+
+    .stepper button:hover, .actions button:hover {
+      border-color: var(--red-2);
+      color: #fff;
+    }
+
+    .value {
+      min-width: 34px;
+      text-align: center;
+      color: var(--text);
       font-weight: bold;
-      font-size: 20px;
-      border: 2px solid #475569;
-      background: white;
-      color: black;
+      font-size: 1.1rem;
     }
 
-    .success {
-      background: #bfdbfe;
-      border-color: #3b82f6;
-      color: #1e3a8a;
+    .status {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
     }
 
-    .ten {
-      background: #bbf7d0;
-      border-color: #22c55e;
-      color: #14532d;
+    @media (max-width: 850px) {
+      .status { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .one {
-      background: #fecaca;
-      border-color: #ef4444;
-      color: #7f1d1d;
+    .pill {
+      background: #101014;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
     }
 
-    .hidden {
+    .pill strong {
+      display: block;
+      color: var(--red-2);
+      font-size: 1.35rem;
+    }
+
+    .ok { color: var(--good); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+
+    .track-boxes {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--muted);
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .box.filled {
+      background: var(--red);
+      border-color: var(--red-2);
+    }
+
+    .box.threshold {
+      border-right: 3px solid var(--text);
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 7px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .primary {
+      background: var(--red) !important;
+      border-color: var(--red-2) !important;
+    }
+
+    .print-sheet {
       display: none;
     }
 
-    .ap-button-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
+    @media print {
+      @page {
+        size: letter;
+        margin: 0.45in;
+      }
 
-    .ap-spend {
-      background: #475569;
-    }
+      html,
+      body {
+        background: white !important;
+        color: var(--ink) !important;
+        font-size: 10pt;
+        line-height: 1.2;
+      }
 
-    .ap-spend:hover {
-      background: #334155;
-    }
+      header,
+      main > .actions,
+      .screen-only {
+        display: none !important;
+      }
 
-    .skill-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 12px;
-    }
+      main {
+        width: 100%;
+        margin: 0;
+        display: block;
+      }
 
-    .talent-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 16px;
-      align-items: start;
-    }
+      .print-sheet {
+        display: block !important;
+        color: var(--ink);
+        background: white;
+        font-family: Georgia, "Times New Roman", serif;
+      }
 
-    .talent-card {
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 12px;
-    }
+      .print-page {
+        display: block;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin: 0;
+        padding: 0;
+      }
 
-    .talent-meta {
-      color: #94a3b8;
-      font-size: 13px;
-      margin-top: 4px;
-    }
+      .print-page + .print-page {
+        break-before: page;
+        page-break-before: always;
+      }
 
-    .skill-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      background: #0f172a;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
+      .print-header {
+        border: 2px solid #111;
+        padding: 7px 10px;
+        margin: 0 0 8px;
+        text-align: center;
+      }
 
-    .muted {
-      color: #94a3b8;
-      font-size: 14px;
-    }
+      .print-header h1 {
+        font-size: 20pt;
+        letter-spacing: 0.14em;
+        margin: 0;
+        color: #111;
+        text-shadow: none;
+      }
 
-    .resource-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
+      .print-header p {
+        margin: 2px 0 0;
+        font-size: 8.5pt;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
 
-    h1, h2, h3 {
-      margin-top: 0;
-    }
-  </style>
+      .print-sheet h1,
+      .print-sheet h2,
+      .print-sheet h3 {
+        color: var(--ink);
+        text-shadow: none;
+      }
+
+      .print-grid,
+      .print-main-grid,
+      .print-case-grid,
+      .print-advancement-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        align-items: start;
+      }
+
+      .print-stack {
+        display: grid;
+        gap: 7px;
+        align-content: start;
+      }
+
+      .print-card {
+        border: 1.25px solid #222;
+        padding: 6px 7px;
+        margin: 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        min-height: auto;
+      }
+
+      .print-card.full {
+        grid-column: 1 / -1;
+      }
+
+      .print-card h2 {
+        font-size: 9pt;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-bottom: 1px solid #222;
+        padding-bottom: 2px;
+        margin: 0 0 5px;
+      }
+
+      .print-card p {
+        margin: 1px 0 3px;
+      }
+
+      .print-field {
+        display: grid;
+        grid-template-columns: 0.72in 1fr;
+        gap: 5px;
+        align-items: end;
+        margin-bottom: 4px;
+      }
+
+      .print-label {
+        font-weight: bold;
+        font-size: 8pt;
+        text-transform: uppercase;
+      }
+
+      .print-line {
+        border-bottom: 1px solid #222;
+        min-height: 14px;
+        padding: 0 2px 1px;
+      }
+
+      .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8.6pt;
+      }
+
+      .print-table th,
+      .print-table td {
+        border-bottom: 1px solid #bbb;
+        padding: 2px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .print-table th:last-child,
+      .print-table td:last-child {
+        text-align: center;
+        width: 0.42in;
+      }
+
+      .print-track {
+        margin-bottom: 5px;
+      }
+
+      .print-track-title {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        margin-bottom: 2px;
+      }
+
+      .print-boxes span {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 1px solid #222;
+        margin-right: 3px;
+        vertical-align: middle;
+      }
+
+      .print-boxes span.marked {
+        background: #222;
+      }
+
+      .print-boxes span.threshold {
+        border-right: 3px solid #222;
+      }
+
+      .print-notes {
+        min-height: 42px;
+        border: 1px solid #999;
+        padding: 4px;
+        white-space: normal;
+      }
+
+      .print-notes.large {
+        min-height: 62px;
+      }
+
+      .case-page .print-notes {
+        min-height: 88px;
+      }
+
+      .case-page .print-notes.large {
+        min-height: 130px;
+      }
+
+      .advancement-page .print-notes {
+        min-height: 78px;
+      }
+
+      .advancement-page .print-notes.large {
+        min-height: 108px;
+      }
+    }  </style>
 </head>
-
 <body>
-  <div class="container">
+  <header>
+    <h1>Nocturnal</h1>
+    <p>A Modern Ghost-Hunting RPG Character Creator</p>
+  </header>
 
-    <div class="card">
-      <h1>Heroes of the 5th Age</h1>
-      <p class="muted">Standalone Character Manager</p>
-    </div>
+  <main>
+    <section class="actions screen-only">
+      <button class="primary" onclick="printSheet()">Print Character Sheet</button>
+      <button onclick="saveCharacter()">Save to Browser</button>
+      <button onclick="loadCharacter()">Load Saved</button>
+      <button onclick="downloadJSON()">Export JSON</button>
+      <button onclick="importJSON()">Import JSON</button>
+      <input id="jsonImport" type="file" accept="application/json,.json" style="display:none" onchange="handleJSONImport(event)" />
+      <button onclick="resetCharacter()">Reset</button>
+    </section>
 
-    <div class="card">
-      <h2>Save / Load Character</h2>
-      <p class="muted">Save locally in this browser, export a JSON backup, or import a saved character file.</p>
-
-      <div class="grid grid-3">
-        <button onclick="saveCharacterToBrowser()">Save to Browser</button>
-        <button onclick="loadCharacterFromBrowser()">Load from Browser</button>
-        <button onclick="exportCharacterJson()">Export JSON</button>
+    <section class="grid screen-only">
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 1: Investigator Identity</h2>
+          <span class="hint">Start with the person before the haunting.</span>
+        </div>
+        <div class="two-col">
+          <div>
+            <label for="charName">Character Name</label>
+            <input id="charName" placeholder="Mara Voss" />
+          </div>
+          <div>
+            <label for="playerName">Player Name</label>
+            <input id="playerName" placeholder="Player" />
+          </div>
+          <div>
+            <label for="occupation">Occupation / Background</label>
+            <input id="occupation" placeholder="Night-shift hospital administrator" />
+          </div>
+          <div>
+            <label for="concept">Concept</label>
+            <input id="concept" placeholder="Tired records expert who notices impossible patterns" />
+          </div>
+        </div>
+        <label for="faith">Faith / Conviction</label>
+        <input id="faith" placeholder="Records matter because the dead deserve to be counted correctly." />
       </div>
 
-      <div class="grid grid-3" style="margin-top:12px;">
-        <div>
-          <label>Import JSON</label>
-          <input id="importCharacterFile" type="file" accept=".json" onchange="importCharacterJson(event)" />
+      <div class="card span-8">
+        <div class="section-title">
+          <h2>Step 2: Attributes</h2>
+          <span id="attrStatus" class="hint">Spend 6 starting points. Later advancement can raise Attributes.</span>
         </div>
-
-        <div style="display:flex; align-items:end;">
-          <button class="button-red" style="width:100%;" onclick="clearCharacterSheet()">Clear Character</button>
-        </div>
-
-        <div class="stat">
-          <div class="label">Save Status</div>
-          <div id="saveStatus" class="muted">Not saved this session.</div>
+        <div id="attributes"></div>
+        <div class="status">
+          <div class="pill">Points Spent<strong id="attrSpent">0</strong></div>
+          <div class="pill">Starting Remaining<strong id="attrRemain">6</strong></div>
+          <div class="pill">Base Total<strong>6</strong></div>
+          <div class="pill">Current Max<strong>10</strong></div>
         </div>
       </div>
-    </div>
 
-    <div class="grid grid-3">
-      <div class="card">
-        <h2>Identity</h2>
-        <label>Character Name</label>
-        <input id="charName" placeholder="Character Name" />
-
-        <label>Ancestry</label>
-        <select id="ancestry" onchange="handleAncestryChange()">
-          <option value="human">Human</option>
-          <option value="dwarf">Dwarf</option>
-          <option value="elf">Elf</option>
-          <option value="kotkin">Kötkin</option>
-          <option value="orken">Orken</option>
-          <option value="serpentas">Serpentas</option>
-          <option value="ulfhedine">Ulfhediné</option>
+      <div class="card span-4">
+        <div class="section-title">
+          <h2>Step 3: Awakening</h2>
+          <span class="hint">Magic always leaves a mark.</span>
+        </div>
+        <label for="awakeningStory">How did magic enter your life?</label>
+        <textarea id="awakeningStory" placeholder="Describe the impossible event that changed the character."></textarea>
+        <label for="awakeningAttr">Awakening Attribute +1</label>
+        <select id="awakeningAttr" onchange="updateAll()"></select>
+        <label for="awakeningTrack">Starting Cost Track +1</label>
+        <select id="awakeningTrack" onchange="updateAll()">
+          <option value="Stress">Stress</option>
+          <option value="Exposure">Exposure</option>
+          <option value="Attention">Attention</option>
+          <option value="Corruption">Corruption</option>
         </select>
+        <p class="small-note">The selected Attribute gains +1, up to the normal starting maximum. The chosen Track begins with 1 marked Cost.</p>
+      </div>
 
-        <div id="humanBonusChoices" class="grid grid-3" style="margin-top:12px;">
+      <div class="card span-6">
+        <div class="section-title">
+          <h2>Step 4: Skills</h2>
+          <span id="skillStatus" class="hint">Choose starting Skills, then add advancement ranks as play continues.</span>
+        </div>
+        <div id="skills"></div>
+        <p class="small-note">Starting characters choose six Skills at 1 and one Skill at 2. Advancement can raise Skills later.</p>
+      </div>
+
+      <div class="card span-6">
+        <div class="section-title">
+          <h2>Step 5: Psychic Ability</h2>
+          <span class="hint">All psychic abilities are Haunting Actions.</span>
+        </div>
+        <label for="psychic">Choose One Ability</label>
+        <select id="psychic" onchange="updatePsychicInfo()"></select>
+        <div class="pill" style="text-align:left; margin-top:12px;">
+          <strong id="psychicRoll" style="font-size:1rem;">Roll</strong>
+          <p id="psychicDesc" style="margin:8px 0 0;"></p>
+          <p id="psychicCost" class="small-note"></p>
+        </div>
+        <div class="section-title" style="margin-top:18px;">
+          <h2>Step 6: Tools and Notes</h2>
+        </div>
+        <label for="gear">Investigative Tools / Gear</label>
+        <textarea id="gear" placeholder="Recorder, flashlight, old case files, phone, notebook, camera..."></textarea>
+      </div>
+
+      <div class="card span-6">
+        <div class="section-title">
+          <h2>Step 6: Faith as Authority</h2>
+          <span class="hint">Conviction can impose meaning onto the supernatural.</span>
+        </div>
+        <p class="small-note">Faith does not have to be religious. It may be religion, scientific certainty, moral duty, philosophy, ancestral belief, or personal conviction.</p>
+        <label for="faithPrinciples">Sacred Principle / Core Rule</label>
+        <textarea id="faithPrinciples" placeholder="What principle does your investigator believe reality must obey?"></textarea>
+        <div class="status" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="pill" style="text-align:left;">
+            <strong style="font-size:1rem;">Binding Through Faith</strong>
+            <p class="small-note">Roll: Power + Presence or Power + Persuasion</p>
+          </div>
+          <div class="pill" style="text-align:left;">
+            <strong style="font-size:1rem;">Banishment Through Faith</strong>
+            <p class="small-note">Roll: Power + Will or Power + Resolve</p>
+          </div>
+        </div>
+        <p class="small-note">Faith-based actions generate Corruption and may generate Attention from forces aligned with or opposed to the belief being invoked.</p>
+        <label for="faithNotes">Faith Notes / Tests / Crisis</label>
+        <textarea id="faithNotes" placeholder="Contradictions, vows, moments of crisis, affirmations, or consequences from using Faith."></textarea>
+      </div>
+
+
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 7: Tracks</h2>
+          <span class="hint">Tracks measure pressure, not hit points.</span>
+        </div>
+        <div id="tracks"></div>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 8: Current Case Notes</h2>
+          <span class="hint">Optional investigation workspace.</span>
+        </div>
+        <div class="two-col">
           <div>
-            <label>Human Bonus 1</label>
-            <select id="humanBonusOne" onchange="updateSheet()"></select>
+            <label for="caseName">Case / Haunt Name</label>
+            <input id="caseName" placeholder="Room 214" />
           </div>
           <div>
-            <label>Human Bonus 2</label>
-            <select id="humanBonusTwo" onchange="updateSheet()"></select>
+            <label for="caseLocation">Location</label>
+            <input id="caseLocation" placeholder="County hospital, abandoned wing" />
           </div>
         </div>
-
-        <label>Cultural Trait</label>
-        <select id="culturalTrait" onchange="updateSheet()"></select>
-
-        <div class="stat" style="margin-top:12px;">
-          <div class="label">Ancestral Trait</div>
-          <div id="ancestralTraitDisplay" class="muted"></div>
-        </div>
-
-        <div class="stat" style="margin-top:12px;">
-          <div class="label">Languages</div>
-          <div id="languagesDisplay" class="muted"></div>
-        </div>
-
-        <div class="stat" style="margin-top:12px;">
-          <div class="label">Starting Equipment</div>
-          <div id="startingEquipmentDisplay" class="muted"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Vitals</h2>
-        <div class="grid grid-3">
-          <div class="stat">
-            <div class="label">HP</div>
-            <div id="hp" class="big">16</div>
+        <label for="disturbance">Initial Disturbance</label>
+        <textarea id="disturbance" placeholder="What seems wrong at the start of the case?"></textarea>
+        <div class="two-col">
+          <div>
+            <label for="anchor">Anchor Clues</label>
+            <textarea id="anchor" placeholder="What may bind the Pattern to reality?"></textarea>
           </div>
-          <div class="stat">
-            <div class="label">Max AP</div>
-            <input id="actionPoints" type="number" value="5" min="0" max="20" onchange="syncCurrentAPToMax()" />
+          <div>
+            <label for="feed">Feed Clues</label>
+            <textarea id="feed" placeholder="What may sustain the Pattern?"></textarea>
           </div>
-          <div class="stat">
-            <div class="label">Move</div>
-            <div id="moveSpeed" class="big">4</div>
+          <div>
+            <label for="trigger">Trigger Clues</label>
+            <textarea id="trigger" placeholder="What causes the haunting to manifest?"></textarea>
           </div>
-        </div>
-
-        <div class="resource-grid">
-          <div class="stat">
-            <div class="label">Arcane SP</div>
-            <div id="arcaneSP" class="big">0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Divine SP</div>
-            <div id="divineSP" class="big">0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Ki Points</div>
-            <div id="kiPoints" class="big">0</div>
+          <div>
+            <label for="notes">Evidence / Witness Notes</label>
+            <textarea id="notes" placeholder="Names, events, records, impressions, contradictions..."></textarea>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Equipment Slots</h2>
-        <div class="stat">
-          <div class="label">Capacity</div>
-          <div id="slots" class="big">14 / 30</div>
+      <div class="card span-12">
+        <div class="section-title">
+          <h2>Step 9: Advancement & Lasting Change</h2>
+          <span class="hint">Growth in Nocturnal comes through pressure, consequence, and definition.</span>
         </div>
+        <div class="two-col">
+          <div>
+            <label for="stabilizedCapabilities">Stabilized Capabilities</label>
+            <textarea id="stabilizedCapabilities" placeholder="Reliable methods learned through repeated use, cost, and consequence. Example: Pattern mapping, safe ward procedure, EVP interpretation."></textarea>
+          </div>
+          <div>
+            <label for="lastingChanges">Lasting Changes</label>
+            <textarea id="lastingChanges" placeholder="Permanent marks, scars, altered behavior, changed access, or Pattern influence that remains after a case."></textarea>
+          </div>
+          <div>
+            <label for="factionAlignment">Faction Alignment / Oversight</label>
+            <textarea id="factionAlignment" placeholder="Organizations, contacts, obligations, restrictions, or protection gained through play."></textarea>
+          </div>
+          <div>
+            <label for="majorCases">Major Cases Survived</label>
+            <textarea id="majorCases" placeholder="Case name, outcome, and consequence. Example: Room 214, Pattern collapsed, hospital records altered."></textarea>
+          </div>
+        </div>
+        <label for="thresholdEvents">Threshold Events</label>
+        <textarea id="thresholdEvents" placeholder="Track thresholds crossed, full Track states survived, sacrifices made, or moments that changed the character."></textarea>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>Action Point Tracker</h2>
-      <p class="muted">Attack and spell actions cost 2 AP. Movement costs 1 AP per 4 squares.</p>
-
-      <div class="grid grid-3">
-        <div class="stat">
-          <div class="label">Current AP</div>
-          <div id="currentAPDisplay" class="big">5</div>
-        </div>
-
-        <div class="stat">
-          <div class="label">Movement Remaining</div>
-          <div id="movementRemaining" class="big">20 sq</div>
-        </div>
-
-        <div class="stat">
-          <div class="label">AP Spent</div>
-          <div id="apSpentDisplay" class="big">0</div>
-        </div>
-      </div>
-
-      <div class="ap-button-row">
-        <button class="ap-spend" onclick="spendAP(2, 'Attack')">Attack -2 AP</button>
-        <button class="ap-spend" onclick="spendAP(2, 'Spell')">Spell -2 AP</button>
-        <button class="ap-spend" onclick="spendAP(1, 'Move 4 Squares')">Move 4 Squares -1 AP</button>
-        <button onclick="resetAP()">Reset AP</button>
-      </div>
-
-      <div id="apWarning" class="muted" style="margin-top: 12px;"></div>
-      <div id="apLog" class="muted" style="margin-top: 8px;"></div>
-    </div>
-
-    <div class="card">
-      <h2>Attributes</h2>
-      <div class="grid grid-6">
-        <div>
-          <label>Brawn</label>
-          <input id="brawn" type="number" value="4" onchange="updateSheet()" />
-        </div>
-        <div>
-          <label>Coordination</label>
-          <input id="coordination" type="number" value="4" onchange="updateSheet()" />
-        </div>
-        <div>
-          <label>Intellect</label>
-          <input id="intellect" type="number" value="4" onchange="updateSheet()" />
-        </div>
-        <div>
-          <label>Reasoning</label>
-          <input id="reasoning" type="number" value="4" onchange="updateSheet()" />
-        </div>
-        <div>
-          <label>Will</label>
-          <input id="will" type="number" value="4" onchange="updateSheet()" />
-        </div>
-        <div>
-          <label>Power</label>
-          <input id="power" type="number" value="4" onchange="updateSheet()" />
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Skill Ranks</h2>
-      <p class="muted">Enter each skill rank. A rank of 0 means the skill is untrained, so 10s do not explode.</p>
-      <div id="skillRankGrid" class="grid grid-6"></div>
-    </div>
-
-    <div class="card">
-      <h2>Skills</h2>
-      <p class="muted">Each skill uses its default linked attribute. Combat Arts appears twice because melee and ranged attacks use different attributes.</p>
-      <div id="skillRollList" class="skill-grid"></div>
-    </div>
-
-
-    <div class="card">
-      <h2>Talents</h2>
-      <p class="muted">Stage 1: search the talent database, add talents to the character, and view their rules. Automation comes next.</p>
-
-      <div class="grid grid-3">
-        <div>
-          <label>Search Talents</label>
-          <input id="talentSearch" placeholder="Search by name, prerequisite, activation, or effect" oninput="renderTalentPicker()" />
-        </div>
-
-        <div>
-          <label>Talent</label>
-          <select id="talentSelect"></select>
-        </div>
-
-        <div style="display:flex; align-items:end;">
-          <button style="width:100%;" onclick="addSelectedTalent()">Add Talent</button>
-        </div>
-      </div>
-
-      <div class="stat" style="margin-top:16px;">
-        <div class="label">Selected Talents</div>
-        <div id="talentCount" class="big">0</div>
-      </div>
-
-      <div id="selectedTalents" class="talent-list" style="margin-top:16px;"></div>
-    </div>
-
-    <div class="grid grid-3">
-      <div class="card">
-        <h2>Combat</h2>
-
-        <button class="button-red" style="width:100%; margin-bottom:10px;" onclick="rollSkill('Melee Attack', 'brawn', 'combatArts')">
-          Melee Attack<br />
-          <span class="muted">Combat Arts + Brawn</span>
-        </button>
-
-        <button class="button-green" style="width:100%; margin-bottom:10px;" onclick="rollSkill('Ranged Attack', 'coordination', 'combatArts')">
-          Ranged Attack<br />
-          <span class="muted">Combat Arts + Coordination</span>
-        </button>
-
-        <button class="button-purple" style="width:100%;" onclick="rollSkill('Arcane Spell', 'intellect', 'arcaneArts')">
-          Arcane Spell<br />
-          <span class="muted">Arcane Arts + Intellect</span>
-        </button>
-      </div>
-
-      <div class="card">
-        <h2>Defenses</h2>
-        <div class="stat">
-          <div class="label">Physical Resistance Endure</div>
-          <div id="prEndure" class="big">4d10</div>
-        </div>
-        <div class="stat">
-          <div class="label">Physical Resistance Avoid</div>
-          <div id="prAvoid" class="big">4d10</div>
-        </div>
-        <div class="stat">
-          <div class="label">Mental Resistance Resolve</div>
-          <div id="mrResolve" class="big">4d10</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="dicePanel" class="card hidden">
-      <div style="display:flex; justify-content:space-between; gap:16px; align-items:center;">
-        <div>
-          <h2 id="rollLabel">Roll</h2>
-          <div id="rollPool" class="muted"></div>
-        </div>
-        <div style="text-align:right;">
-          <div class="muted">Successes</div>
-          <div id="successes" class="big">0</div>
-        </div>
-      </div>
-
-      <h3>Base Dice</h3>
-      <div id="diceResults" class="dice-row"></div>
-
-      <h3>Exploded Dice</h3>
-      <div id="explodedResults" class="dice-row"></div>
-
-      <div class="grid grid-3" style="margin-top:16px;">
-        <div class="stat">
-          <div class="label">Natural 10s</div>
-          <div id="tenCount" class="big">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">Natural 1s</div>
-          <div id="oneCount" class="big">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">Critical</div>
-          <div id="criticalType" class="big">None</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
+    <section class="print-sheet" id="printSheet"></section>
+  </main>
 
   <script>
+    const attributeInfo = {
+      Presence: "Noticeability, social weight, narrative gravity",
+      Intellect: "Reason, cognition, pattern analysis",
+      Instinct: "Perception, intuition, situational sense",
+      Resolve: "Stability, grounding, recovery",
+      Will: "Identity, self-definition, resistance",
+      Power: "Haunting sensitivity and interference"
+    };
 
+    const skills = [
+      "Awareness", "Athletics", "Computers", "Drive", "Firearms", "Investigation",
+      "Medicine", "Persuasion", "Research", "Skullduggery", "Stealth", "Streetwise"
+    ];
 
-    const ANCESTRIES = {
-      dwarf: {
-        name: "Dwarf",
-        bonuses: { brawn: 1, reasoning: 1 },
-        ancestralTrait: "Stoneblood Endurance",
-        languages: ["Common", "Stone Tongue"],
-        culturalTraits: ["Path of the Dwarf", "Mountain’s Bulwark", "Dwarven Resilience", "Earth Sense", "Forgeheart", "Tunnel Fighter", "Earth’s Insight"],
-        startingEquipment: "Hammer or battle axe, hand axe or dagger, chain shirt, dwarven iron shield, miner’s pick or smith’s tools, lantern with oil."
+    const psychicAbilities = {
+      Mediumship: {
+        roll: "Power + Presence",
+        cost: "Base Cost: 2 Stress + 1 Attention",
+        desc: "Communicate directly with entities, lingering presences, or the dead."
       },
-      elf: {
-        name: "Elf",
-        bonuses: { coordination: 1, intellect: 1 },
-        ancestralTrait: "Keen Vision",
-        languages: ["Common", "Elder Speech"],
-        culturalTraits: ["Greenland Sight", "Ethereal Presence", "Ancient Wisdom", "Nature’s Whisper", "Shadowmeld", "Arcane Affinity"],
-        startingEquipment: "Longbow or spear, shortsword or dagger, leather or hide armor, fletching kit, pouch of herbs, forest or ruin trinket."
+      Clairvoyance: {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "See spirits, manifestations, or supernatural disturbances invisible to normal perception."
       },
-      human: {
-        name: "Human",
-        bonuses: {},
-        ancestralTrait: "Versatility",
-        languages: ["Common", "One bonus language"],
-        culturalTraits: ["Fields of Iron", "Blood of the Peaks", "Shadows of the Street", "Children of the Sun", "Temple-Born", "Adaptable Mind", "Resourceful Resilience", "Crowd Instincts"],
-        startingEquipment: "One martial weapon, dagger, leather armor, optional shield, tools based on upbringing."
+      Clairsentience: {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "Sense emotional states, presence, or intent from supernatural entities."
       },
-      kotkin: {
-        name: "Kötkin",
-        bonuses: { coordination: 1, power: 1 },
-        ancestralTrait: "Shadowstep Grace",
-        languages: ["Common", "Twilight Cant"],
-        culturalTraits: ["Shadow Pounce", "Night Hunter", "Whisker Sense", "Veil Dancer", "Feline Agility", "Moonlit Dash", "Predator’s Intuition"],
-        startingEquipment: "Paired curved daggers or shortswords, throwing knives or hand crossbow, shadow-leather armor, climbing hooks or rope, mirror or obsidian shard, moonlit charm."
+      Clairaudience: {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "Hear disembodied voices, whispers, sounds, or disturbances."
       },
-      orken: {
-        name: "Orken",
-        bonuses: { brawn: 1, will: 1 },
-        ancestralTrait: "Bloodfire Surge",
-        languages: ["Common", "Orkish"],
-        culturalTraits: ["Run Like the Wind", "Ferocious Charge", "Ironhide Resilience", "Berserker Discipline", "Savage Instincts", "Brutal Intimidation"],
-        startingEquipment: "Greataxe, heavy club, or spear, knife, hide armor, optional crude shield, trophy tokens, survival tools."
+      Psychometry: {
+        roll: "Power + Investigation",
+        cost: "Base Cost: 1 Stress + 1 Exposure",
+        desc: "Sense memories, emotions, or supernatural residue through physical objects."
       },
-      serpentas: {
-        name: "Serpentas",
-        bonuses: { reasoning: 1, power: 1 },
-        ancestralTrait: "Cold-Blooded Logic",
-        languages: ["Common", "Serpentine"],
-        culturalTraits: ["Snake Bite", "Venomous Legacy", "Mystic Channeling", "Serpent’s Senses", "Scales of Protection", "Eldritch Warding", "Desert Affinity"],
-        startingEquipment: "Scimitar or spear, dagger, scaled leather armor, buckler or small round shield, ritual charm, desert survival kit."
+      Retrocognition: {
+        roll: "Power + Investigation",
+        cost: "Base Cost: 1 Stress + 1 Exposure",
+        desc: "Perceive echoes of past events tied to a location or Pattern."
       },
-      ulfhedine: {
-        name: "Ulfhediné",
-        bonuses: { brawn: 1, power: 1 },
-        ancestralTrait: "Blood of the Beast",
-        languages: ["Common", "Ulfspeech"],
-        culturalTraits: ["Wild Sense", "Alpha Instincts", "Pack Tactics", "Beastmaster’s Bond", "Savage Resilience", "Moonlit Howl", "Warden of the Wilds"],
-        startingEquipment: "Spear or hand axe, hunting knife, hide or fur armor, animal totem charm, hunting horn."
+      "Spirit Tracking": {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress",
+        desc: "Follow supernatural trails, disturbances, or movement left behind by a manifestation."
+      },
+      "Aura Reading": {
+        roll: "Power + Instinct",
+        cost: "Base Cost: 1 Stress + 1 Attention",
+        desc: "Perceive spiritual influence surrounding people, objects, or locations."
       }
     };
 
-    const ATTRIBUTE_IDS = ["brawn", "coordination", "intellect", "reasoning", "will", "power"];
+    const STARTING_ATTRIBUTE_POINTS = 6;
+    const STARTING_SKILL_RANKS = 8;
+    const ATTRIBUTE_MAX = 10;
+    const SKILL_MAX = 5;
 
-    const TALENTS = [
-      { name: "Action Point Reserve", prerequisites: "Any Arts Skill 2+; Attribute 4+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase maximum AP by +1 per rank." },
-      { name: "Acute Hearing", prerequisites: "None", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to Awareness and Investigation involving sound; +1 Passive Awareness when hearing applies." },
-      { name: "Acute Smell", prerequisites: "None", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to Awareness and Nature involving scent; +1 Passive Awareness when smell applies." },
-      { name: "Animal Empathy", prerequisites: "Handle Animal 1 or Nature 1; Power 3+", range: "Power 2", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 with one chosen animal type; empathic communication with bonded animal." },
-      { name: "Arcane Discovery", prerequisites: "Arcane Arts 1; Intellect 5+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Learn one extra Arcane Spell; +1d10 identifying magic and magical research." },
-      { name: "Accelerated Mending", prerequisites: "None", range: "Self", ap: "2", activation: "Passive / Action", upkeep: "None", effect: "Halved recovery time; +2d10 or +2 HP during recovery; remove one physical condition." },
-      { name: "Arcane Reserve", prerequisites: "Arcane Arts 2+; Power 4+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase maximum Arcane Spell Points by +4 per rank." },
-      { name: "Bardic Lore", prerequisites: "Intellect 3+; History 1", range: "Self", ap: "3", activation: "Action", upkeep: "None", effect: "+2d10 to History and lore-related rolls." },
-      { name: "Battlefield Awareness", prerequisites: "Will 5+; Insight 1", range: "Power 3", ap: "2", activation: "Action", upkeep: "1", effect: "Grant Defense bonuses to allies; detect hidden enemies." },
-      { name: "Battle Cry", prerequisites: "Brawn 3+; Intimidation 1", range: "Power 2", ap: "1", activation: "Action", upkeep: "None", effect: "Boost ally Defense or reduce enemy Defense." },
-      { name: "Battle Hardened", prerequisites: "Coordination 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Spend 1 AP for +1d10 to Physical Resistance." },
-      { name: "Battle Tough", prerequisites: "Brawn 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Recover HP equal to half Brawn after taking damage." },
-      { name: "Blazing Speed", prerequisites: "Coordination 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+2 movement squares per AP spent moving." },
-      { name: "Berserker Rage", prerequisites: "Brawn 4+ or Will 4+; Combat Arts 2", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "Reduce Defense for bonus Combat Arts dice." },
-      { name: "Berserker's Fury", prerequisites: "Brawn 7+; Combat Arts 4; Berserker's Rage", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+3d10 Combat Arts and +1 melee damage; cannot cast spells." },
-      { name: "Calmness", prerequisites: "Will 3+", range: "Power 1", ap: "2", activation: "Action", upkeep: "None", effect: "+1d10 to calm and poised social rolls." },
-      { name: "Calming Air of Command", prerequisites: "Will 5+", range: "Power 3", ap: "2", activation: "Action", upkeep: "1", effect: "Distribute bonus dice against fear and morale effects." },
-      { name: "Commanding Protection", prerequisites: "Combat Arts 2; Power 5+", range: "Power 2", ap: "2", activation: "Action", upkeep: "None", effect: "Grant ally Defense or reduce enemy Defense." },
-      { name: "Cunning Tongue", prerequisites: "Reasoning 3+", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+1d10 to reasoning-based social rolls." },
-      { name: "Defending Shield Block", prerequisites: "Brawn 5+; Shield Training; Combat Arts 2", range: "Adjacent Ally", ap: "1", activation: "Reaction", upkeep: "None", effect: "Interpose shield to protect ally and reduce damage." },
-      { name: "Divine Reserve", prerequisites: "Divine Arts 2+; Power 4+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase maximum Divine Spell Points by +4 per rank." },
-      { name: "Divine Resistance", prerequisites: "Divine Arts 1 or Temple Lifestyle; Will 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "+2d10 to Mental Resistance against divine or magical effects." },
-      { name: "Divine Devotee", prerequisites: "Will 3+; Divine Arts 1 or Divine Lifestyle", range: "Self", ap: "Varies", activation: "Varies", upkeep: "None", effect: "Gain access to one Divine Domain." },
-      { name: "Divine Weapons", prerequisites: "Divine Arts 1; Brawn 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Bonus dice against undead and demons." },
-      { name: "Divine Defense", prerequisites: "Divine Arts 2; Power 5+", range: "Power 2", ap: "2", activation: "Action", upkeep: "None", effect: "Grant temporary HP to allies." },
-      { name: "Elemental Adaptation", prerequisites: "Power 3+", range: "Self", ap: "2", activation: "Action", upkeep: "None", effect: "Bonus dice against environmental elemental hazards." },
-      { name: "Elemental Vigor", prerequisites: "Power 5+; Elemental Adaptation", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Heal after resisting elemental damage; gain temporary resistance." },
-      { name: "Eloquence", prerequisites: "Intellect 3+; Arcane Arts 1 or Divine Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to spellcasting with verbal components." },
-      { name: "Eye of the Tiger", prerequisites: "Brawn 3+", range: "Self", ap: "1", activation: "Action", upkeep: "1", effect: "+1d10 to non-combat Brawn rolls; +2 carrying slots." },
-      { name: "Expert Avoidance", prerequisites: "Coordination 5+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Spend AP for +2d10 Dodge and Block and free movement." },
-      { name: "Ear for Music", prerequisites: "Will 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Perfect pitch; +2d10 to music and mimicry Performance." },
-      { name: "Exceptional Magical Ability", prerequisites: "Intellect 3+; Arcane Arts 1 or Divine Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to spellcasting rolls." },
-      { name: "Ethereal Sight", prerequisites: "Power 5+; Arcane Arts 1 or Divine Arts 1", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "See invisible creatures and magical effects." },
-      { name: "Fluid Wrists", prerequisites: "None", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 with Thrown and Light Weapons." },
-      { name: "High Jumper", prerequisites: "Brawn 3+", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+2d10 to jumping rolls." },
-      { name: "Healer's Touch", prerequisites: "Will 3+; Healing 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Restore +1 HP per success with Healing." },
-      { name: "Hammerhand", prerequisites: "Brawn 5+; Combat Arts 2 (Unarmed)", range: "Self", ap: "Attack Cost +1", activation: "Action", upkeep: "None", effect: "Ignore non-magical Defense with unarmed attacks." },
-      { name: "Heat Resistance", prerequisites: "Will 5+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+2 Defense and +2d10 vs fire and heat." },
-      { name: "Holy Burst", prerequisites: "Divine Arts 2; Power 5+", range: "2-square radius", ap: "1", activation: "Reaction", upkeep: "1", effect: "Holy shockwave damages undead and demons and knocks prone." },
-      { name: "Hunter's Instinct", prerequisites: "Reasoning 3+; Nature 1", range: "Self", ap: "2", activation: "Action", upkeep: "None", effect: "Mark prey; enhanced tracking and awareness." },
-      { name: "Inner Reserve", prerequisites: "None", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase maximum HP by +5 per rank." },
-      { name: "Iron Will", prerequisites: "Will 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+2d10 against fear and charm; reroll failed resistance once per scene." },
-      { name: "Item Lore", prerequisites: "Intellect 3+; Arcane Arts 1 or Divine Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Bonus dice to identify and craft magical items." },
-      { name: "Intimidating Presence", prerequisites: "Will 5+; Intimidation 2", range: "Power 2", ap: "2", activation: "Action", upkeep: "None", effect: "Frighten targets with opposed Intimidation." },
-      { name: "Judge of Angles", prerequisites: "Reasoning 3+; Skullduggery 1 or Investigation 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to detect hidden doors and traps." },
-      { name: "Ki Mastery", prerequisites: "Will 3+; Combat Arts 1; Pugilist Training or Temple Lifestyle", range: "Self", ap: "Varies", activation: "Action or Reaction", upkeep: "1", effect: "Use Will for melee; gain Martial Arts Schools." },
-      { name: "Ki Reserve", prerequisites: "Combat Arts 2+; Power 4+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase maximum Ki Points by +2 per rank." },
-      { name: "Magical Recovery", prerequisites: "Power 5+; Arcane Arts 2 or Divine Arts 2", range: "Self", ap: "3", activation: "Action", upkeep: "None", effect: "Recover Spell Points during Short Rest." },
-      { name: "Master of Disguise", prerequisites: "Deceit 2; Reasoning 3+", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+1d10 to disguise and impersonation." },
-      { name: "Mana Reading", prerequisites: "Arcane Arts 1 or Divine Arts 1; Intellect 3+", range: "Self", ap: "2", activation: "Action", upkeep: "None", effect: "+2d10 to detect magical auras and residues." },
-      { name: "Manual Deftness", prerequisites: "Coordination 3+; Skullduggery 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to fine manual Skullduggery tasks." },
-      { name: "Musical Magic", prerequisites: "Will 3+; Performance 1", range: "Power 2", ap: "1", activation: "Action", upkeep: "None", effect: "Grant ally +1d10 to next Skill or Combat roll." },
-      { name: "Mystic Insight", prerequisites: "Power 3+; Arcane Arts 1 or Divine Arts 1", range: "Self", ap: "0", activation: "Special", upkeep: "None", effect: "Ask Storyteller one truthful supernatural question." },
-      { name: "Natural Archer", prerequisites: "Coordination 5+; Combat Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase bow range and ignore Cover penalties." },
-      { name: "Natural Facility With Armor", prerequisites: "Brawn 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Gain +1 Defense with one armor type." },
-      { name: "Neutral Odor", prerequisites: "None", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to Stealth or Skullduggery against scent tracking." },
-      { name: "Nimble Skeleton", prerequisites: "Coordination 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 escaping, squeezing, and contortion movement." },
-      { name: "Now You See Me", prerequisites: "Arcane Arts 2; Combat Arts 2; Spell Flutter; Intellect 5+", range: "Self", ap: "1+", activation: "Action", upkeep: "None", effect: "Blink between locations making attacks or spells." },
-      { name: "Outdoorsman", prerequisites: "Reasoning 3+; Nature 1 or Survival 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+2d10 to wilderness survival and tracking." },
-      { name: "Opportunistic Warrior", prerequisites: "Coordination 5+; Combat Arts 2", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Attack of Opportunity deals +3 damage and can stop movement." },
-      { name: "Pack Hunter", prerequisites: "Combat Arts 2+; Reasoning 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 while flanking with allies." },
-      { name: "Portage", prerequisites: "Brawn 3+ or Intellect 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+3 gear slots." },
-      { name: "Precision", prerequisites: "Coordination 5+; Combat Arts 2 or Skullduggery 2", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "Perform ranged Backstab attacks." },
-      { name: "Quiet Stride", prerequisites: "Coordination 3+; Stealth 2", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+1d10 Stealth and stealth attacks." },
-      { name: "Quick Hands", prerequisites: "Coordination 3+; Skullduggery 2", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+1d10 to pickpocketing and sleight of hand." },
-      { name: "Rabbit's Foot", prerequisites: "Skullduggery 1; Coordination 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Impose penalties on attacks against you." },
-      { name: "Regeneration", prerequisites: "Power 7+", range: "Self", ap: "2", activation: "Action", upkeep: "1", effect: "Regain HP each round while active." },
-      { name: "Reverberating Strength", prerequisites: "Brawn 5+; Brawling or Combat Arts 2", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "Knockback, prone, and stun with melee attacks." },
-      { name: "Shadowed Sight", prerequisites: "Reasoning 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "1", effect: "See in dim light and partial darkness." },
-      { name: "Rote Magic", prerequisites: "Intellect 3+; Arcane Arts 1 or Divine Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Reduce Spell Point costs for chosen spells." },
-      { name: "Shielded Step", prerequisites: "Coordination 3+; Shield Training", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Enhanced shield block and free movement." },
-      { name: "Shield Bash", prerequisites: "Brawn 3+; Shield Training", range: "Self", ap: "Attack Cost +1", activation: "Action", upkeep: "None", effect: "Shield attack with bonus dice." },
-      { name: "Spatial Skills", prerequisites: "Power 5+; Arcane Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Increase spell ranges and touch spell distance." },
-      { name: "Steel Grip", prerequisites: "Brawn 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 to resist disarm." },
-      { name: "Steel Gaze", prerequisites: "Will 3+", range: "Power 2", ap: "1", activation: "Action", upkeep: "None", effect: "+1d10 to social rolls using eye contact." },
-      { name: "Speak With Animals", prerequisites: "Handle Animal 1 or Nature 1; Intellect 3+", range: "Power 2", ap: "2", activation: "Action", upkeep: "1", effect: "Communicate with animals." },
-      { name: "Shadow Strike", prerequisites: "Stealth 2; Quiet Stride; Coordination 3+", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+2d10 when attacking from stealth or surprise." },
-      { name: "Silent Takedown", prerequisites: "Stealth 3; Quiet Stride; Shadow Strike; Coordination 5+", range: "Self", ap: "2", activation: "Action", upkeep: "None", effect: "Silently incapacitate surprised humanoids." },
-      { name: "Sturdy Build", prerequisites: "Brawn 5+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Negate physical conditions and gain extra healing." },
-      { name: "Surefooted", prerequisites: "Coordination 3+; Skullduggery 1 or Nature 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Reduce difficult terrain movement cost." },
-      { name: "Swift Follow Through", prerequisites: "Coordination 5+; Combat Arts 2", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Second melee attack costs only 1 AP." },
-      { name: "To The Pain", prerequisites: "Brawn 3+; Combat Arts 2", range: "Self", ap: "Attack Cost +1", activation: "Action", upkeep: "None", effect: "Inflict lingering bleeding damage." },
-      { name: "Trained Regular Footman", prerequisites: "Will 3+; Combat Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "Adjacent allies gain Combat Arts and PR bonuses." },
-      { name: "Training In Disarm", prerequisites: "Coordination 3+; Combat Arts 1", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "+1d10 to disarm attempts." },
-      { name: "Tranquil Mind", prerequisites: "Will 3+", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "+1d10 to Reasoning or Intellect rolls." },
-      { name: "Taunt", prerequisites: "Will 3+; Intimidation 1", range: "Power 2", ap: "1", activation: "Action", upkeep: "None", effect: "Force enemies to focus attacks on you." },
-      { name: "Undetectable", prerequisites: "Will 7+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+2d10 against magical detection and scrying." },
-      { name: "Totems", prerequisites: "Arcane Arts 1 or Divine Arts 1; Will 3+", range: "Self", ap: "3", activation: "Action", upkeep: "1", effect: "Activate one chosen spirit totem ability." },
-      { name: "Turn Demon / Undead", prerequisites: "Divine Arts 1; Holy Symbol; Power 4+", range: "Power 2", ap: "2", activation: "Action", upkeep: "Special", effect: "Turn and damage undead or demons." },
-      { name: "Trap Sense", prerequisites: "Skullduggery 2 or Awareness 2; Intellect 3+", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 and +1 Passive Awareness against traps." },
-      { name: "Trapmaster", prerequisites: "Trap Sense; Skullduggery 3; Intellect 5+", range: "Self", ap: "2", activation: "Action", upkeep: "None", effect: "+2d10 to disarm traps and pick locks." },
-      { name: "Tough Skin", prerequisites: "Brawn 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Reduce damage by Tough Skin rank." },
-      { name: "Weapons Master", prerequisites: "Brawn 7+ or Coordination 7+; Combat Arts 4; Weapon Specialization", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+2d10 with one weapon category." },
-      { name: "Weapon Specialization", prerequisites: "Brawn 3+ or Coordination 3+; Combat Arts 1", range: "Self", ap: "0", activation: "Passive", upkeep: "None", effect: "+1d10 and +1 damage with one weapon type." },
-      { name: "Whirlwind Strike", prerequisites: "Brawn 5+; Combat Arts 2", range: "Melee", ap: "Attack Cost +1", activation: "Action", upkeep: "None", effect: "Attack all adjacent enemies with one strike." },
-      { name: "Unyielding", prerequisites: "Brawn 3+; Will 3+", range: "Self", ap: "1", activation: "Reaction", upkeep: "None", effect: "Add Will to PR or Brawn to MR." },
-      { name: "Unyielding Recovery", prerequisites: "Unyielding", range: "Self", ap: "1", activation: "Action", upkeep: "None", effect: "Recover HP without resting once per short rest." }
-    ];
-
-    let selectedTalents = [];
-
-    function getSelectedTalentCount(name) {
-      return selectedTalents.filter(function(talent) {
-        return talent && talent.name === name;
-      }).length;
-    }
-
-    function getPassiveTalentBonus(name, perRankBonus) {
-      return getSelectedTalentCount(name) * perRankBonus;
-    }
-
-    function getMovementPerAP() {
-      return 4 + getPassiveTalentBonus('Blazing Speed', 2);
-    }
-
-    function getMaxHP() {
-      return (getAttribute('brawn') + getAttribute('coordination')) * 2 + getPassiveTalentBonus('Inner Reserve', 5);
-    }
-
-    function getGearSlots() {
-      return Math.min(10 + getAttribute('brawn') + getPassiveTalentBonus('Portage', 3), 30);
-    }
-
-    function getArcaneSP() {
-      return getNumber('arcaneArts') + getAttribute('power') + getPassiveTalentBonus('Arcane Reserve', 4);
-    }
-
-    function getDivineSP() {
-      return getNumber('divineArts') + getAttribute('power') + getPassiveTalentBonus('Divine Reserve', 4);
-    }
-
-    function getKiPoints() {
-      return getNumber('combatArts') + getAttribute('power') + getPassiveTalentBonus('Ki Reserve', 2);
-    }
-
-    function renderTalentPicker() {
-      const search = (document.getElementById('talentSearch')?.value || '').toLowerCase();
-      const select = document.getElementById('talentSelect');
-      if (!select) return;
-
-      const matches = TALENTS.filter(function(talent) {
-        const haystack = [
-          talent.name,
-          talent.prerequisites,
-          talent.range,
-          talent.ap,
-          talent.activation,
-          talent.upkeep,
-          talent.effect
-        ].join(' ').toLowerCase();
-
-        return haystack.includes(search);
-      });
-
-      select.innerHTML = '';
-
-      matches.forEach(function(talent) {
-        const option = document.createElement('option');
-        option.value = talent.name;
-        option.textContent = talent.name;
-        select.appendChild(option);
-      });
-    }
-
-    function addSelectedTalent() {
-      const select = document.getElementById('talentSelect');
-      if (!select || !select.value) return;
-
-      const talent = TALENTS.find(function(item) {
-        return item.name === select.value;
-      });
-
-      if (!talent) return;
-
-      const rankedTalents = [
-        'Action Point Reserve',
-        'Arcane Reserve',
-        'Divine Reserve',
-        'Inner Reserve',
-        'Ki Reserve',
-        'Portage'
-      ];
-
-      const alreadySelected = selectedTalents.some(function(item) {
-        return item.name === talent.name;
-      });
-
-      if (alreadySelected && !rankedTalents.includes(talent.name)) {
-        alert('This talent is already selected.');
-        return;
-      }
-
-      selectedTalents.push(talent);
-      renderSelectedTalents();
-      updateSheet();
-    }
-
-    function removeSelectedTalent(index) {
-      selectedTalents.splice(index, 1);
-      renderSelectedTalents();
-      updateSheet();
-    }
-
-    function renderSelectedTalents() {
-      const container = document.getElementById('selectedTalents');
-      const count = document.getElementById('talentCount');
-      if (!container || !count) return;
-
-      container.innerHTML = '';
-      count.innerText = selectedTalents.length;
-
-      selectedTalents.forEach(function(talent, index) {
-        const card = document.createElement('div');
-        card.className = 'talent-card';
-
-        const title = document.createElement('h3');
-        title.textContent = talent.name;
-        card.appendChild(title);
-
-        const prereq = document.createElement('div');
-        prereq.className = 'talent-meta';
-        const prereqLabel = document.createElement('strong');
-        prereqLabel.textContent = 'Prerequisites: ';
-        prereq.appendChild(prereqLabel);
-        prereq.appendChild(document.createTextNode(talent.prerequisites));
-        card.appendChild(prereq);
-
-        const meta = document.createElement('div');
-        meta.className = 'talent-meta';
-        meta.appendChild(document.createTextNode('Range: ' + talent.range + ' | AP: ' + talent.ap + ' | Activation: ' + talent.activation + ' | Upkeep: ' + talent.upkeep));
-        card.appendChild(meta);
-
-        const effect = document.createElement('p');
-        effect.textContent = talent.effect;
-        card.appendChild(effect);
-
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.textContent = 'Remove';
-        removeButton.addEventListener('click', function() {
-          removeSelectedTalent(index);
-        });
-        card.appendChild(removeButton);
-
-        container.appendChild(card);
-      });
-    }
-
-
-
-    const SKILLS = [
-      { name: "Arcane Arts", id: "arcaneArts", attribute: "intellect", label: "Arcane Arts" },
-      { name: "Combat Arts", id: "combatArts", attribute: "brawn", label: "Combat Arts (Brawn)" },
-      { name: "Combat Arts", id: "combatArts", attribute: "coordination", label: "Combat Arts (Coordination)" },
-      { name: "Divine Arts", id: "divineArts", attribute: "will", label: "Divine Arts" },
-      { name: "Awareness", id: "awareness", attribute: "reasoning", label: "Awareness" },
-      { name: "Bureaucracy", id: "bureaucracy", attribute: "reasoning", label: "Bureaucracy" },
-      { name: "Carousing", id: "carousing", attribute: "will", label: "Carousing" },
-      { name: "Contacts", id: "contactsSkill", attribute: "reasoning", label: "Contacts" },
-      { name: "Crafting", id: "crafting", attribute: "intellect", label: "Crafting" },
-      { name: "Deceit", id: "deceit", attribute: "intellect", label: "Deceit" },
-      { name: "Diplomacy", id: "diplomacy", attribute: "reasoning", label: "Diplomacy" },
-      { name: "Handle Animal", id: "handleAnimal", attribute: "will", label: "Handle Animal" },
-      { name: "Healing", id: "healing", attribute: "reasoning", label: "Healing" },
-      { name: "History", id: "history", attribute: "intellect", label: "History" },
-      { name: "Insight", id: "insight", attribute: "will", label: "Insight" },
-      { name: "Intimidation", id: "intimidation", attribute: "will", label: "Intimidation" },
-      { name: "Investigation", id: "investigation", attribute: "reasoning", label: "Investigation" },
-      { name: "Nature", id: "nature", attribute: "reasoning", label: "Nature" },
-      { name: "Navigation", id: "navigation", attribute: "reasoning", label: "Navigation" },
-      { name: "Performance", id: "performance", attribute: "power", label: "Performance" },
-      { name: "Physical Training", id: "physicalTraining", attribute: "brawn", label: "Physical Training (Brawn)" },
-      { name: "Physical Training", id: "physicalTraining", attribute: "coordination", label: "Physical Training (Coordination)" },
-      { name: "Ride", id: "ride", attribute: "coordination", label: "Ride" },
-      { name: "Skullduggery", id: "skullduggery", attribute: "coordination", label: "Skullduggery" },
-      { name: "Stealth", id: "stealth", attribute: "coordination", label: "Stealth" },
-      { name: "Survival", id: "survival", attribute: "reasoning", label: "Survival" },
-      { name: "Trading", id: "trading", attribute: "intellect", label: "Trading" }
-    ];
-
-    const UNIQUE_SKILLS = [
-      { name: "Arcane Arts", id: "arcaneArts" },
-      { name: "Combat Arts", id: "combatArts" },
-      { name: "Divine Arts", id: "divineArts" },
-      { name: "Awareness", id: "awareness" },
-      { name: "Bureaucracy", id: "bureaucracy" },
-      { name: "Carousing", id: "carousing" },
-      { name: "Contacts", id: "contactsSkill" },
-      { name: "Crafting", id: "crafting" },
-      { name: "Deceit", id: "deceit" },
-      { name: "Diplomacy", id: "diplomacy" },
-      { name: "Handle Animal", id: "handleAnimal" },
-      { name: "Healing", id: "healing" },
-      { name: "History", id: "history" },
-      { name: "Insight", id: "insight" },
-      { name: "Intimidation", id: "intimidation" },
-      { name: "Investigation", id: "investigation" },
-      { name: "Nature", id: "nature" },
-      { name: "Navigation", id: "navigation" },
-      { name: "Performance", id: "performance" },
-      { name: "Physical Training", id: "physicalTraining" },
-      { name: "Ride", id: "ride" },
-      { name: "Skullduggery", id: "skullduggery" },
-      { name: "Stealth", id: "stealth" },
-      { name: "Survival", id: "survival" },
-      { name: "Trading", id: "trading" }
-    ];
-
-    const ATTRIBUTE_LABELS = {
-      brawn: "Brawn",
-      coordination: "Coordination",
-      intellect: "Intellect",
-      reasoning: "Reasoning",
-      will: "Will",
-      power: "Power"
+    const state = {
+      attrs: {},
+      skills: {},
+      markedTracks: { Stress: 0, Exposure: 0, Attention: 0, Corruption: 0 }
     };
 
-    function getCurrentAncestryKey() {
-      const select = document.getElementById('ancestry');
-      return select && ANCESTRIES[select.value] ? select.value : 'human';
-    }
+    function init() {
+      Object.keys(attributeInfo).forEach(a => state.attrs[a] = 1);
+      skills.forEach(s => state.skills[s] = 0);
 
-    function getCurrentAncestry() {
-      return ANCESTRIES[getCurrentAncestryKey()];
-    }
+      const attrSelect = document.getElementById("awakeningAttr");
+      Object.keys(attributeInfo).forEach(a => {
+        const opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        attrSelect.appendChild(opt);
+      });
 
-    function renderHumanBonusSelectors() {
-      ['humanBonusOne', 'humanBonusTwo'].forEach(function(id, index) {
-        const select = document.getElementById(id);
-        if (!select) return;
+      const psychicSelect = document.getElementById("psychic");
+      Object.keys(psychicAbilities).forEach(a => {
+        const opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        psychicSelect.appendChild(opt);
+      });
 
-        if (!select.options.length) {
-          ATTRIBUTE_IDS.forEach(function(attributeId) {
-            const option = document.createElement('option');
-            option.value = attributeId;
-            option.textContent = ATTRIBUTE_LABELS[attributeId];
-            select.appendChild(option);
-          });
-        }
-
-        if (index === 0 && !select.value) select.value = 'brawn';
-        if (index === 1 && !select.value) select.value = 'coordination';
+      renderAttributes();
+      renderSkills();
+      updateAll();
+      updatePsychicInfo();
+      ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "gear", "faithPrinciples", "faithNotes", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes", "stabilizedCapabilities", "lastingChanges", "factionAlignment", "majorCases", "thresholdEvents"].forEach(id => {
+        document.getElementById(id).addEventListener("input", updatePrintSheet);
       });
     }
 
-    function getAncestryBonus(attributeId) {
-      const ancestryKey = getCurrentAncestryKey();
-      const ancestry = getCurrentAncestry();
-
-      if (ancestryKey === 'human') {
-        const first = document.getElementById('humanBonusOne')?.value;
-        const second = document.getElementById('humanBonusTwo')?.value;
-        let bonus = 0;
-        if (first === attributeId) bonus++;
-        if (second === attributeId && second !== first) bonus++;
-        return bonus;
-      }
-
-      return Number(ancestry.bonuses && ancestry.bonuses[attributeId] ? ancestry.bonuses[attributeId] : 0);
-    }
-
-    function getAttribute(attributeId) {
-      return getNumber(attributeId) + getAncestryBonus(attributeId);
-    }
-
-    function renderCulturalTraitOptions(preserveSelection = true) {
-      const select = document.getElementById('culturalTrait');
-      if (!select) return;
-
-      const previous = preserveSelection ? select.value : '';
-      const ancestry = getCurrentAncestry();
-      select.innerHTML = '';
-
-      ancestry.culturalTraits.forEach(function(traitName) {
-        const option = document.createElement('option');
-        option.value = traitName;
-        option.textContent = traitName;
-        select.appendChild(option);
-      });
-
-      if (previous && ancestry.culturalTraits.includes(previous)) {
-        select.value = previous;
-      }
-    }
-
-    function updateAncestryDisplay() {
-      const ancestryKey = getCurrentAncestryKey();
-      const ancestry = getCurrentAncestry();
-      const humanChoices = document.getElementById('humanBonusChoices');
-
-      if (humanChoices) {
-        humanChoices.style.display = ancestryKey === 'human' ? 'grid' : 'none';
-      }
-
-      const ancestralTrait = document.getElementById('ancestralTraitDisplay');
-      const languages = document.getElementById('languagesDisplay');
-      const equipment = document.getElementById('startingEquipmentDisplay');
-
-      if (ancestralTrait) ancestralTrait.innerText = ancestry.ancestralTrait;
-      if (languages) languages.innerText = ancestry.languages.join(', ');
-      if (equipment) equipment.innerText = ancestry.startingEquipment;
-    }
-
-    function handleAncestryChange() {
-      renderCulturalTraitOptions(false);
-      updateSheet();
-    }
-
-    function renderSkillRanks() {
-      const grid = document.getElementById('skillRankGrid');
-      grid.innerHTML = '';
-
-      UNIQUE_SKILLS.forEach(function(skill) {
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = `
-          <label>${skill.name}</label>
-          <input id="${skill.id}" type="number" min="0" max="5" value="0" onchange="updateSheet()" />
-        `;
-        grid.appendChild(wrapper);
-      });
-
-      document.getElementById('combatArts').value = 1;
-    }
-
-    function renderSkillRolls() {
-      const list = document.getElementById('skillRollList');
-      list.innerHTML = '';
-
-      SKILLS.forEach(function(skill) {
-        const row = document.createElement('div');
-        row.className = 'skill-row';
+    function renderAttributes() {
+      const wrap = document.getElementById("attributes");
+      wrap.innerHTML = "";
+      Object.entries(attributeInfo).forEach(([name, desc]) => {
+        const row = document.createElement("div");
+        row.className = "attr-row";
         row.innerHTML = `
-          <div>
-            <strong>${skill.label}</strong>
-            <div id="${skill.id}_${skill.attribute}_pool" class="muted">Pool: 0d10</div>
-            <div class="muted">${ATTRIBUTE_LABELS[skill.attribute]} + ${skill.name}</div>
+          <div class="name"><strong>${name}</strong><span>${desc}</span></div>
+          <div class="stepper">
+            <button type="button" onclick="changeAttr('${name}', -1)">−</button>
+            <div class="value" id="attr-${name}">1</div>
+            <button type="button" onclick="changeAttr('${name}', 1)">+</button>
           </div>
-          <button onclick="rollSkill('${skill.label}', '${skill.attribute}', '${skill.id}')">Roll</button>
+          <div class="hint" id="final-${name}">Final 1</div>
         `;
-        list.appendChild(row);
+        wrap.appendChild(row);
       });
     }
 
-    function getNumber(id) {
-      return Number(document.getElementById(id).value || 0);
+    function renderSkills() {
+      const wrap = document.getElementById("skills");
+      wrap.innerHTML = "";
+      skills.forEach(name => {
+        const row = document.createElement("div");
+        row.className = "skill-row";
+        row.innerHTML = `
+          <div class="name"><strong>${name}</strong></div>
+          <div class="stepper">
+            <button type="button" onclick="changeSkill('${name}', -1)">−</button>
+            <div class="value" id="skill-${name}">0</div>
+            <button type="button" onclick="changeSkill('${name}', 1)">+</button>
+          </div>
+          <div class="hint"></div>
+        `;
+        wrap.appendChild(row);
+      });
     }
 
-    function d10() {
-      return Math.floor(Math.random() * 10) + 1;
+    function changeAttr(name, delta) {
+      const next = state.attrs[name] + delta;
+      if (next < 1 || next > ATTRIBUTE_MAX) return;
+      state.attrs[name] = next;
+      updateAll();
     }
 
-    function createDie(value) {
-      const div = document.createElement('div');
-      div.className = 'dice';
-
-      if (value >= 6) div.classList.add('success');
-      if (value === 10) div.classList.add('ten');
-      if (value === 1) div.classList.add('one');
-
-      div.innerText = value;
-      return div;
+    function changeSkill(name, delta) {
+      const next = state.skills[name] + delta;
+      if (next < 0 || next > SKILL_MAX) return;
+      state.skills[name] = next;
+      updateAll();
     }
 
-    function rollSkill(label, attributeId, skillId) {
-      const attribute = ATTRIBUTE_IDS.includes(attributeId) ? getAttribute(attributeId) : getNumber(attributeId);
-      const skillRank = getNumber(skillId);
-      const pool = attribute + skillRank;
-      const trained = skillRank > 0;
-
-      rollDicePool(label, pool, trained);
+    function getAttrSpent() {
+      return Object.values(state.attrs).reduce((sum, v) => sum + (v - 1), 0);
     }
 
-    function rollDicePool(label, pool, trained = true) {
-      const dicePanel = document.getElementById('dicePanel');
-      const diceResults = document.getElementById('diceResults');
-      const explodedResults = document.getElementById('explodedResults');
+    function getFinalAttr(name) {
+      const awakened = document.getElementById("awakeningAttr").value;
+      return Math.min(ATTRIBUTE_MAX, state.attrs[name] + (awakened === name ? 1 : 0));
+    }
 
-      diceResults.innerHTML = '';
-      explodedResults.innerHTML = '';
-
-      const rolls = [];
-
-      for (let i = 0; i < pool; i++) {
-        rolls.push(d10());
-      }
-
-      let successes = 0;
-      let ones = 0;
-      let tens = 0;
-
-      rolls.forEach(function(roll) {
-        if (roll >= 6) successes++;
-        if (roll === 1) ones++;
-        if (roll === 10) tens++;
-
-        diceResults.appendChild(createDie(roll));
+    function updateAll() {
+      Object.keys(state.attrs).forEach(name => {
+        document.getElementById(`attr-${name}`).textContent = state.attrs[name];
+        document.getElementById(`final-${name}`).textContent = `Final ${getFinalAttr(name)}`;
       });
 
-      let explodeTens = tens;
-
-      if (ones > 0 && tens > 0) {
-        const cancel = confirm('Use one natural 10 to cancel one natural 1?');
-
-        if (cancel) {
-          explodeTens--;
-          ones--;
-          successes--;
-        }
-      }
-
-      const exploded = [];
-
-      if (trained) {
-        while (explodeTens > 0) {
-          const roll = d10();
-          exploded.push(roll);
-
-          if (roll >= 6) successes++;
-          if (roll === 10) explodeTens++;
-
-          explodeTens--;
-        }
-      }
-
-      exploded.forEach(function(roll) {
-        explodedResults.appendChild(createDie(roll));
-      });
-
-      document.getElementById('rollLabel').innerText = label;
-      document.getElementById('rollPool').innerText = pool + 'd10' + (trained ? ' trained' : ' untrained');
-      document.getElementById('successes').innerText = successes;
-      document.getElementById('tenCount').innerText = tens;
-      document.getElementById('oneCount').innerText = ones;
-
-      if (tens >= 5) {
-        document.getElementById('criticalType').innerText = 'Major';
-      } else if (tens > 0) {
-        document.getElementById('criticalType').innerText = 'Minor';
+      const spent = getAttrSpent();
+      const attrAdvancement = Math.max(0, spent - STARTING_ATTRIBUTE_POINTS);
+      const attrRemaining = Math.max(0, STARTING_ATTRIBUTE_POINTS - spent);
+      document.getElementById("attrSpent").textContent = spent;
+      document.getElementById("attrRemain").textContent = attrRemaining;
+      const attrStatus = document.getElementById("attrStatus");
+      if (spent < STARTING_ATTRIBUTE_POINTS) {
+        attrStatus.textContent = `Spend ${attrRemaining} more starting Attribute point(s).`;
+        attrStatus.className = "hint warn";
+      } else if (attrAdvancement > 0) {
+        attrStatus.textContent = `Starting Attributes complete. Advancement Attribute increases added: ${attrAdvancement}.`;
+        attrStatus.className = "hint ok";
       } else {
-        document.getElementById('criticalType').innerText = 'None';
+        attrStatus.textContent = "Starting Attributes complete.";
+        attrStatus.className = "hint ok";
       }
 
-      dicePanel.classList.remove('hidden');
+      skills.forEach(name => document.getElementById(`skill-${name}`).textContent = state.skills[name]);
+      const oneRanks = Object.values(state.skills).filter(v => v === 1).length;
+      const twoOrHigherRanks = Object.values(state.skills).filter(v => v >= 2).length;
+      const totalSkillRanks = Object.values(state.skills).reduce((sum, v) => sum + v, 0);
+      const skillAdvancement = Math.max(0, totalSkillRanks - STARTING_SKILL_RANKS);
+      const skillStatus = document.getElementById("skillStatus");
+      if (totalSkillRanks < STARTING_SKILL_RANKS) {
+        skillStatus.textContent = `Assign ${STARTING_SKILL_RANKS - totalSkillRanks} more starting Skill rank(s). Starting guide: six Skills at 1 and one Skill at 2.`;
+        skillStatus.className = "hint warn";
+      } else if (skillAdvancement > 0) {
+        skillStatus.textContent = `Starting Skills complete. Advancement Skill ranks added: ${skillAdvancement}.`;
+        skillStatus.className = "hint ok";
+      } else if (oneRanks >= 6 && twoOrHigherRanks >= 1) {
+        skillStatus.textContent = "Starting Skills complete.";
+        skillStatus.className = "hint ok";
+      } else {
+        skillStatus.textContent = `Starting guide: six Skills at 1 and one Skill at 2. Current total ranks: ${totalSkillRanks}.`;
+        skillStatus.className = "hint warn";
+      }
+
+      renderTracks();
+      updatePrintSheet();
     }
 
-
-
-    const SAVE_KEY = "ho5a_character_manager_save_v1";
-
-    function collectCharacterData() {
-      const data = {
-        version: 1,
-        savedAt: new Date().toISOString(),
-        identity: {
-          name: document.getElementById('charName')?.value || "",
-          ancestry: document.getElementById('ancestry')?.value || "human",
-          humanBonusOne: document.getElementById('humanBonusOne')?.value || "brawn",
-          humanBonusTwo: document.getElementById('humanBonusTwo')?.value || "coordination",
-          ancestralTrait: getCurrentAncestry().ancestralTrait,
-          culturalTrait: document.getElementById('culturalTrait')?.value || "",
-          languages: getCurrentAncestry().languages || [],
-          startingEquipment: getCurrentAncestry().startingEquipment || ""
-        },
-        attributes: {
-          brawn: getNumber('brawn'),
-          coordination: getNumber('coordination'),
-          intellect: getNumber('intellect'),
-          reasoning: getNumber('reasoning'),
-          will: getNumber('will'),
-          power: getNumber('power')
-        },
-        skills: {},
-        selectedTalentNames: (selectedTalents || []).map(function(talent) { return talent.name; }),
-        actionPoints: {
-          max: getNumber('actionPoints'),
-          current: currentAP
-        }
+    function getTrackMax(track) {
+      const a = {
+        Stress: getFinalAttr("Will") + getFinalAttr("Resolve"),
+        Exposure: getFinalAttr("Presence") + getFinalAttr("Instinct"),
+        Attention: getFinalAttr("Power") + getFinalAttr("Instinct"),
+        Corruption: getFinalAttr("Power") + getFinalAttr("Will")
       };
+      return a[track];
+    }
 
-      UNIQUE_SKILLS.forEach(function(skill) {
-        data.skills[skill.id] = getNumber(skill.id);
+    function renderTracks() {
+      const wrap = document.getElementById("tracks");
+      wrap.innerHTML = "";
+      ["Stress", "Exposure", "Attention", "Corruption"].forEach(track => {
+        const max = Math.max(1, getTrackMax(track));
+        const awakeningTrack = document.getElementById("awakeningTrack").value;
+        const startingMark = awakeningTrack === track ? 1 : 0;
+        // Starting Cost reflects where the character began, but it can be recovered during play.
+        if (state.markedTracks[track] < 0) state.markedTracks[track] = 0;
+        if (state.markedTracks[track] > max) state.markedTracks[track] = max;
+        const row = document.createElement("div");
+        row.className = "track-row";
+        row.innerHTML = `<div class="name"><strong>${track}</strong><span>${trackHelp(track)}</span></div><div class="track-boxes" id="boxes-${track}"></div><div class="hint">${state.markedTracks[track]} / ${max}</div>`;
+        wrap.appendChild(row);
+        const boxes = row.querySelector(`#boxes-${track}`);
+        for (let i = 1; i <= max; i++) {
+          const b = document.createElement("div");
+          b.className = "box" + (i <= state.markedTracks[track] ? " filled" : "") + (i === Math.ceil(max/2) ? " threshold" : "");
+          b.title = `${track} ${i}`;
+          b.onclick = () => {
+            state.markedTracks[track] = i === state.markedTracks[track] ? i - 1 : i;
+            if (state.markedTracks[track] < 0) state.markedTracks[track] = 0;
+            updateAll();
+          };
+          boxes.appendChild(b);
+        }
       });
+    }
 
+    function trackHelp(track) {
+      return {
+        Stress: "Mental and emotional strain",
+        Exposure: "Public visibility and scrutiny",
+        Attention: "Haunting and institutional notice",
+        Corruption: "Power asymmetry and transformation"
+      }[track];
+    }
+
+    function updatePsychicInfo() {
+      const ability = document.getElementById("psychic").value;
+      const data = psychicAbilities[ability];
+      document.getElementById("psychicRoll").textContent = data.roll;
+      document.getElementById("psychicDesc").textContent = data.desc;
+      document.getElementById("psychicCost").textContent = data.cost;
+      updatePrintSheet();
+    }
+
+    function formData() {
+      const ids = ["charName", "playerName", "occupation", "concept", "faith", "awakeningStory", "awakeningAttr", "awakeningTrack", "psychic", "gear", "faithPrinciples", "faithNotes", "caseName", "caseLocation", "disturbance", "anchor", "feed", "trigger", "notes", "stabilizedCapabilities", "lastingChanges", "factionAlignment", "majorCases", "thresholdEvents"];
+      const data = { attrs: state.attrs, skills: state.skills, markedTracks: state.markedTracks };
+      ids.forEach(id => data[id] = document.getElementById(id).value);
       return data;
     }
 
-    function applyCharacterData(data) {
-      if (!data || typeof data !== 'object') return;
+    function applyData(data) {
+      if (!data || typeof data !== "object") return;
 
-      if (data.identity) {
-        if (document.getElementById('charName')) {
-          document.getElementById('charName').value = data.identity.name || "";
-        }
+      Object.keys(attributeInfo).forEach(attr => {
+        const value = data.attrs && Number.isFinite(Number(data.attrs[attr])) ? Number(data.attrs[attr]) : state.attrs[attr];
+        state.attrs[attr] = Math.min(ATTRIBUTE_MAX, Math.max(1, value));
+      });
 
-        const ancestryValue = data.identity.ancestry || (data.identity.culture || "Human").toLowerCase().replace("ö", "o").replace("é", "e");
-        const ancestryAliases = {
-          dwarf: "dwarf",
-          elf: "elf",
-          human: "human",
-          kotkin: "kotkin",
-          kötkin: "kotkin",
-          orken: "orken",
-          serpentas: "serpentas",
-          ulfhedine: "ulfhedine",
-          ulfhediné: "ulfhedine"
-        };
-        const ancestryKey = ancestryAliases[ancestryValue] || "human";
+      skills.forEach(skill => {
+        const value = data.skills && Number.isFinite(Number(data.skills[skill])) ? Number(data.skills[skill]) : state.skills[skill];
+        state.skills[skill] = Math.min(SKILL_MAX, Math.max(0, value));
+      });
 
-        if (document.getElementById('ancestry')) {
-          document.getElementById('ancestry').value = ancestryKey;
-        }
+      ["Stress", "Exposure", "Attention", "Corruption"].forEach(track => {
+        const value = data.markedTracks && Number.isFinite(Number(data.markedTracks[track])) ? Number(data.markedTracks[track]) : state.markedTracks[track];
+        state.markedTracks[track] = Math.max(0, value);
+      });
 
-        renderHumanBonusSelectors();
+      Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el && typeof data[id] === "string") el.value = data[id];
+      });
 
-        if (document.getElementById('humanBonusOne')) {
-          document.getElementById('humanBonusOne').value = data.identity.humanBonusOne || "brawn";
-        }
-
-        if (document.getElementById('humanBonusTwo')) {
-          document.getElementById('humanBonusTwo').value = data.identity.humanBonusTwo || "coordination";
-        }
-
-        renderCulturalTraitOptions(false);
-
-        if (document.getElementById('culturalTrait') && data.identity.culturalTrait) {
-          document.getElementById('culturalTrait').value = data.identity.culturalTrait;
-        }
-      }
-
-      if (data.attributes) {
-        Object.keys(data.attributes).forEach(function(key) {
-          const input = document.getElementById(key);
-          if (input) input.value = data.attributes[key];
-        });
-      }
-
-      if (data.skills) {
-        Object.keys(data.skills).forEach(function(key) {
-          const input = document.getElementById(key);
-          if (input) input.value = data.skills[key];
-        });
-      }
-
-      if (Array.isArray(data.selectedTalentNames)) {
-        selectedTalents = data.selectedTalentNames.map(function(name) {
-          return TALENTS.find(function(talent) {
-            return talent.name === name;
-          });
-        }).filter(Boolean);
-      } else if (Array.isArray(data.selectedTalents)) {
-        selectedTalents = data.selectedTalents.map(function(savedTalent) {
-          return TALENTS.find(function(talent) {
-            return talent.name === savedTalent.name;
-          }) || savedTalent;
-        });
-      } else {
-        selectedTalents = [];
-      }
-
-      if (data.actionPoints) {
-        if (document.getElementById('actionPoints')) {
-          document.getElementById('actionPoints').value = data.actionPoints.max || 5;
-        }
-        currentAP = Number(data.actionPoints.current ?? data.actionPoints.max ?? 5);
-      } else {
-        currentAP = getMaxAP();
-      }
-
-      renderTalentPicker();
-      renderSelectedTalents();
-      updateSheet();
+      updateAll();
+      updatePsychicInfo();
     }
 
-    function setSaveStatus(message) {
-      const status = document.getElementById('saveStatus');
-      if (status) status.innerText = message;
+    function saveCharacter() {
+      localStorage.setItem("nocturnalCharacter", JSON.stringify(formData()));
+      alert("Character saved in this browser.");
     }
 
-    function saveCharacterToBrowser() {
-      const data = collectCharacterData();
-      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-      setSaveStatus("Saved: " + new Date().toLocaleString());
+    function loadCharacter() {
+      const raw = localStorage.getItem("nocturnalCharacter");
+      if (!raw) return alert("No saved character found in this browser.");
+      applyData(JSON.parse(raw));
     }
 
-    function loadCharacterFromBrowser() {
-      const raw = localStorage.getItem(SAVE_KEY);
-
-      if (!raw) {
-        setSaveStatus("No saved character found.");
-        return;
-      }
-
-      try {
-        const data = JSON.parse(raw);
-        applyCharacterData(data);
-        setSaveStatus("Loaded saved character.");
-      } catch (error) {
-        console.error(error);
-        setSaveStatus("Saved character could not be loaded.");
-      }
-    }
-
-    function exportCharacterJson() {
-      const data = collectCharacterData();
-      const name = (data.identity.name || "ho5a_character").replace(/\s+/g, "_").toLowerCase();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(formData(), null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = name + ".json";
-      link.click();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${document.getElementById("charName").value || "nocturnal-character"}.json`;
+      a.click();
       URL.revokeObjectURL(url);
-      setSaveStatus("Exported JSON.");
     }
 
-    function importCharacterJson(event) {
+    function importJSON() {
+      const input = document.getElementById("jsonImport");
+      input.value = "";
+      input.click();
+    }
+
+    function handleJSONImport(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-
-      reader.onload = function(loadEvent) {
+      reader.onload = function(e) {
         try {
-          const data = JSON.parse(loadEvent.target.result);
-          applyCharacterData(data);
-          setSaveStatus("Imported JSON.");
+          const data = JSON.parse(e.target.result);
+          applyData(data);
+          alert("Character imported successfully.");
         } catch (error) {
-          console.error(error);
-          setSaveStatus("Import failed. Choose a valid character JSON file.");
+          alert("This file could not be imported. Please select a valid Nocturnal character JSON file.");
         }
-
-        event.target.value = "";
       };
-
+      reader.onerror = function() {
+        alert("The selected file could not be read.");
+      };
       reader.readAsText(file);
     }
 
-    function clearCharacterSheet() {
-      const confirmClear = confirm("Clear this character sheet? This will not delete exported JSON files.");
-      if (!confirmClear) return;
-
-      localStorage.removeItem(SAVE_KEY);
-
-      document.getElementById('charName').value = "";
-      document.getElementById('ancestry').value = "human";
-      renderHumanBonusSelectors();
-      document.getElementById('humanBonusOne').value = "brawn";
-      document.getElementById('humanBonusTwo').value = "coordination";
-      renderCulturalTraitOptions(false);
-
-      ["brawn", "coordination", "intellect", "reasoning", "will", "power"].forEach(function(id) {
-        document.getElementById(id).value = 4;
-      });
-
-      UNIQUE_SKILLS.forEach(function(skill) {
-        const input = document.getElementById(skill.id);
-        if (input) input.value = 0;
-      });
-
-      const combatArts = document.getElementById('combatArts');
-      if (combatArts) combatArts.value = 1;
-
-      selectedTalents = [];
-      document.getElementById('actionPoints').value = 5;
-      currentAP = 5;
-
-      renderTalentPicker();
-      renderSelectedTalents();
-      updateSheet();
-      setSaveStatus("Character cleared.");
+    function resetCharacter() {
+      if (!confirm("Reset this character?")) return;
+      Object.keys(attributeInfo).forEach(a => state.attrs[a] = 1);
+      skills.forEach(s => state.skills[s] = 0);
+      state.markedTracks = { Stress: 0, Exposure: 0, Attention: 0, Corruption: 0 };
+      document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+      document.getElementById("awakeningAttr").selectedIndex = 0;
+      document.getElementById("awakeningTrack").selectedIndex = 0;
+      document.getElementById("psychic").selectedIndex = 0;
+      updateAll();
+      updatePsychicInfo();
     }
 
-    let currentAP = 5;
-    let apLog = [];
-
-    function getMaxAP() {
-      return getNumber('actionPoints') + getPassiveTalentBonus('Action Point Reserve', 1);
+    function printSheet() {
+      updatePrintSheet();
+      window.print();
     }
 
-    function syncCurrentAPToMax() {
-      currentAP = getMaxAP();
-      apLog = [];
-      updateSheet();
+    function updatePrintSheet() {
+      const d = formData();
+
+      const attrRows = Object.keys(attributeInfo)
+        .map(a => `<tr><td>${a}</td><td>${attributeInfo[a]}</td><td>${getFinalAttr(a)}</td></tr>`)
+        .join("");
+
+      const skillRows = skills
+        .map(s => `<tr><td>${s}</td><td>${state.skills[s]}</td></tr>`)
+        .join("");
+
+      const trackRows = ["Stress", "Exposure", "Attention", "Corruption"].map(t => {
+        const max = getTrackMax(t);
+        let boxes = "";
+        for (let i = 1; i <= max; i++) {
+          const marked = i <= state.markedTracks[t] ? " marked" : "";
+          const threshold = i === Math.ceil(max / 2) ? " threshold" : "";
+          boxes += `<span class="${marked}${threshold}"></span>`;
+        }
+        return `<div class="print-track"><div class="print-track-title"><span>${t}</span><span>${state.markedTracks[t]} / ${max}</span></div><div class="print-boxes">${boxes}</div></div>`;
+      }).join("");
+
+      const p = psychicAbilities[d.psychic] || psychicAbilities.Mediumship;
+
+      document.getElementById("printSheet").innerHTML = `
+        <div class="print-page">
+          <div class="print-header">
+            <h1>NOCTURNAL</h1>
+            <p>A Modern Ghost-Hunting RPG Investigator Sheet</p>
+          </div>
+
+          <div class="print-card full compact">
+            <h2>Investigator Identity</h2>
+            <div class="print-grid">
+              <div>
+                <div class="print-field"><div class="print-label">Name</div><div class="print-line">${safe(d.charName)}</div></div>
+                <div class="print-field"><div class="print-label">Player</div><div class="print-line">${safe(d.playerName)}</div></div>
+                <div class="print-field"><div class="print-label">Occupation</div><div class="print-line">${safe(d.occupation)}</div></div>
+              </div>
+              <div>
+                <div class="print-field"><div class="print-label">Concept</div><div class="print-line">${safe(d.concept)}</div></div>
+                <div class="print-field"><div class="print-label">Faith</div><div class="print-line">${safe(d.faith)}</div></div>
+                <div class="print-field"><div class="print-label">Psychic</div><div class="print-line">${safe(d.psychic)}</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="print-main-grid" style="margin-top:8px;">
+            <div class="print-stack">
+              <div class="print-card compact">
+                <h2>Attributes</h2>
+                <table class="print-table">
+                  <thead><tr><th>Attribute</th><th>Use</th><th>Rating</th></tr></thead>
+                  <tbody>${attrRows}</tbody>
+                </table>
+              </div>
+
+              <div class="print-card compact">
+                <h2>Skills</h2>
+                <table class="print-table">
+                  <thead><tr><th>Skill</th><th>Rank</th></tr></thead>
+                  <tbody>${skillRows}</tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="print-stack">
+              <div class="print-card compact">
+                <h2>Tracks</h2>
+                ${trackRows}
+              </div>
+
+              <div class="print-card compact">
+                <h2>Awakening</h2>
+                <p><strong>Awakening Attribute:</strong> ${safe(d.awakeningAttr)} +1</p>
+                <p><strong>Starting Cost:</strong> ${safe(d.awakeningTrack)} +1</p>
+                <div class="print-notes large">${safe(d.awakeningStory)}</div>
+              </div>
+
+              <div class="print-card compact">
+                <h2>Psychic Ability</h2>
+                <p><strong>${safe(d.psychic)}</strong></p>
+                <p>${safe(p.desc)}</p>
+                <p><strong>Roll:</strong> ${safe(p.roll)}</p>
+                <p><strong>${safe(p.cost)}</strong></p>
+              </div>
+
+              <div class="print-card compact">
+                <h2>Faith as Authority</h2>
+                <p><strong>Binding:</strong> Power + Presence or Power + Persuasion</p>
+                <p><strong>Banishment:</strong> Power + Will or Power + Resolve</p>
+                <p><strong>Cost:</strong> Generates Corruption and may generate Attention.</p>
+                <p><strong>Sacred Principle / Core Rule</strong></p>
+                <div class="print-notes">${safe(d.faithPrinciples)}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="print-page case-page">
+          <div class="print-header">
+            <h1>CURRENT CASE</h1>
+            <p>Haunt Investigation Workspace</p>
+          </div>
+
+          <div class="print-card full compact">
+            <h2>Case Identity</h2>
+            <div class="print-grid">
+              <div class="print-field"><div class="print-label">Case</div><div class="print-line">${safe(d.caseName)}</div></div>
+              <div class="print-field"><div class="print-label">Location</div><div class="print-line">${safe(d.caseLocation)}</div></div>
+            </div>
+          </div>
+
+          <div class="print-case-grid" style="margin-top:8px;">
+            <div class="print-stack">
+              <div class="print-card compact">
+                <h2>Initial Disturbance</h2>
+                <div class="print-notes large">${safe(d.disturbance)}</div>
+              </div>
+              <div class="print-card compact">
+                <h2>Evidence / Witness Notes</h2>
+                <div class="print-notes large">${safe(d.notes)}</div>
+              </div>
+            </div>
+            <div class="print-stack">
+              <div class="print-card compact">
+                <h2>Anchor</h2>
+                <div class="print-notes">${safe(d.anchor)}</div>
+              </div>
+              <div class="print-card compact">
+                <h2>Feed</h2>
+                <div class="print-notes">${safe(d.feed)}</div>
+              </div>
+              <div class="print-card compact">
+                <h2>Trigger</h2>
+                <div class="print-notes">${safe(d.trigger)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="print-page advancement-page">
+          <div class="print-header">
+            <h1>ADVANCEMENT</h1>
+            <p>Lasting Change and Campaign Consequences</p>
+          </div>
+
+          <div class="print-card full compact">
+            <h2>Investigator Field Notes</h2>
+            <div class="print-grid">
+              <div>
+                <p><strong>Tools / Gear</strong></p>
+                <div class="print-notes">${safe(d.gear)}</div>
+              </div>
+              <div>
+                <p><strong>Faith Notes / Tests / Crisis</strong></p>
+                <div class="print-notes">${safe(d.faithNotes)}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="print-advancement-grid" style="margin-top:8px;">
+            <div class="print-stack">
+              <div class="print-card compact">
+                <h2>Stabilized Capabilities</h2>
+                <div class="print-notes large">${safe(d.stabilizedCapabilities)}</div>
+              </div>
+              <div class="print-card compact">
+                <h2>Faction Alignment / Oversight</h2>
+                <div class="print-notes large">${safe(d.factionAlignment)}</div>
+              </div>
+              <div class="print-card compact">
+                <h2>Major Cases Survived</h2>
+                <div class="print-notes large">${safe(d.majorCases)}</div>
+              </div>
+            </div>
+            <div class="print-stack">
+              <div class="print-card compact">
+                <h2>Lasting Changes</h2>
+                <div class="print-notes large">${safe(d.lastingChanges)}</div>
+              </div>
+              <div class="print-card compact">
+                <h2>Threshold Events</h2>
+                <div class="print-notes large">${safe(d.thresholdEvents)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    function spendAP(cost, label) {
-      const maxAP = getMaxAP();
-
-      if (currentAP > maxAP) {
-        currentAP = maxAP;
-      }
-
-      if (currentAP < cost) {
-        document.getElementById('apWarning').innerText = 'Not enough AP for ' + label + '.';
-        updateAPDisplay();
-        return;
-      }
-
-      currentAP -= cost;
-      apLog.unshift(label + ' spent ' + cost + ' AP');
-
-      if (apLog.length > 5) {
-        apLog = apLog.slice(0, 5);
-      }
-
-      document.getElementById('apWarning').innerText = '';
-      updateAPDisplay();
+    function safe(value) {
+      return (value || "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])).replace(/\n/g, "<br>");
     }
 
-    function resetAP() {
-      currentAP = getMaxAP();
-      apLog = [];
-      document.getElementById('apWarning').innerText = '';
-      updateAPDisplay();
-    }
-
-    function updateAPDisplay() {
-      const maxAP = getMaxAP();
-      const spent = Math.max(0, maxAP - currentAP);
-
-      document.getElementById('currentAPDisplay').innerText = currentAP;
-      document.getElementById('movementRemaining').innerText = (currentAP * getMovementPerAP()) + ' sq';
-      document.getElementById('apSpentDisplay').innerText = spent;
-      document.getElementById('apLog').innerText = apLog.length ? 'Recent: ' + apLog.join(' | ') : '';
-    }
-
-    function updateSheet() {
-      const brawn = getAttribute('brawn');
-      const coordination = getAttribute('coordination');
-      const intellect = getAttribute('intellect');
-      const reasoning = getAttribute('reasoning');
-      const will = getAttribute('will');
-      const combatArts = getNumber('combatArts');
-      const arcaneArts = getNumber('arcaneArts');
-      const divineArts = getNumber('divineArts');
-      const awareness = getNumber('awareness');
-      const physicalTraining = getNumber('physicalTraining');
-      const insight = getNumber('insight');
-
-      updateAncestryDisplay();
-
-      document.getElementById('hp').innerText = getMaxHP();
-      document.getElementById('slots').innerText = getGearSlots() + ' / 30';
-      document.getElementById('moveSpeed').innerText = getMovementPerAP();
-      document.getElementById('arcaneSP').innerText = getArcaneSP();
-      document.getElementById('divineSP').innerText = getDivineSP();
-      document.getElementById('kiPoints').innerText = getKiPoints();
-
-      SKILLS.forEach(function(skill) {
-        const poolElement = document.getElementById(skill.id + '_' + skill.attribute + '_pool');
-        if (!poolElement) return;
-
-        const pool = getAttribute(skill.attribute) + getNumber(skill.id);
-        poolElement.innerText = 'Pool: ' + pool + 'd10';
-      });
-
-      document.getElementById('prEndure').innerText = (brawn + physicalTraining) + 'd10';
-      document.getElementById('prAvoid').innerText = (coordination + physicalTraining) + 'd10';
-      document.getElementById('mrResolve').innerText = (will + insight) + 'd10';
-      updateAPDisplay();
-    }
-
-    renderHumanBonusSelectors();
-    renderCulturalTraitOptions(false);
-    renderSkillRanks();
-    renderSkillRolls();
-    renderTalentPicker();
-    renderSelectedTalents();
-    currentAP = getMaxAP();
-    updateSheet();
+    init();
   </script>
 </body>
 </html>
